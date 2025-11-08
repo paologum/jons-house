@@ -12,7 +12,7 @@ This Unity project creates an interactive 2D experience where:
 
 ## Unity Version
 
-- **Recommended**: Unity 2021.3.0f1 or later
+- **Recommended**: Unity 6000.2.5f1 or later
 - **Project Type**: 2D
 
 ## Project Structure
