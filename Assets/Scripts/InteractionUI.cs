@@ -39,8 +39,8 @@ public class InteractionUI : MonoBehaviour
             closeButton.onClick.AddListener(HideMemory);
         }
         
-        // Find all interactable objects
-        allInteractables = FindObjectsOfType<InteractableObject>();
+    // Find all interactable objects (use newer API to avoid deprecated call)
+    allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
     }
 
     void Update()

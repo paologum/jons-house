@@ -30,9 +30,10 @@ public class InteractableObject : MonoBehaviour
             originalColor = spriteRenderer.color;
         }
         
-        // Find the player and UI manager
-        player = GameObject.FindGameObjectWithTag("Player");
-        interactionUI = FindObjectOfType<InteractionUI>();
+    // Find the player and UI manager
+    player = GameObject.FindGameObjectWithTag("Player");
+    // Use FindAnyObjectByType to avoid deprecated API and for performance
+    interactionUI = FindAnyObjectByType<InteractionUI>();
     }
 
     void Update()

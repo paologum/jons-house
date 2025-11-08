@@ -8,7 +8,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     
     [Header("Game Settings")]
+    // Serialized for editor use but currently unused by code. Keep it editable in the Inspector
+    // and silence the 'assigned but never used' compiler warning.
+#pragma warning disable CS0414
     [SerializeField] private bool showInstructions = true;
+#pragma warning restore CS0414
     
     void Awake()
     {
