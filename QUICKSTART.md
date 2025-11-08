@@ -5,7 +5,7 @@ Get the game running in 5 minutes!
 ## Prerequisites
 
 - Unity Hub installed
-- Unity 2021.3.0f1 or later installed
+- Unity 6000.2.5f1 or later installed
 
 ## Setup Steps
 
