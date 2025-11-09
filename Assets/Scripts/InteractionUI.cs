@@ -13,7 +13,7 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI storyText;
     [SerializeField] private Image memoryImageDisplay;
     [SerializeField] private Button closeButton;
-    
+
     [Header("Hint Display")]
     [SerializeField] private GameObject interactionHint;
     [SerializeField] private TextMeshProUGUI hintText;
@@ -27,20 +27,20 @@ public class InteractionUI : MonoBehaviour
         {
             memoryPanel.SetActive(false);
         }
-        
+
         if (interactionHint != null)
         {
             interactionHint.SetActive(false);
         }
-        
+
         // Setup close button
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(HideMemory);
         }
-        
-    // Find all interactable objects (use newer API to avoid deprecated call)
-    allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
+
+        // Find all interactable objects (use newer API to avoid deprecated call)
+        allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
     }
 
     void Update()
@@ -50,7 +50,7 @@ public class InteractionUI : MonoBehaviour
         {
             HideMemory();
         }
-        
+
         // Update interaction hint
         UpdateInteractionHint();
     }
@@ -61,19 +61,19 @@ public class InteractionUI : MonoBehaviour
     public void ShowMemory(string title, string story, Sprite image = null)
     {
         if (memoryPanel == null) return;
-        
+
         memoryPanel.SetActive(true);
-        
+
         if (titleText != null)
         {
             titleText.text = title;
         }
-        
+
         if (storyText != null)
         {
             storyText.text = story;
         }
-        
+
         if (memoryImageDisplay != null)
         {
             if (image != null)
@@ -86,7 +86,7 @@ public class InteractionUI : MonoBehaviour
                 memoryImageDisplay.gameObject.SetActive(false);
             }
         }
-        
+
         // Pause game time (optional)
         Time.timeScale = 0f;
     }
@@ -100,7 +100,7 @@ public class InteractionUI : MonoBehaviour
         {
             memoryPanel.SetActive(false);
         }
-        
+
         // Resume game time
         Time.timeScale = 1f;
     }
@@ -111,11 +111,11 @@ public class InteractionUI : MonoBehaviour
     private void UpdateInteractionHint()
     {
         if (interactionHint == null) return;
-        
+
         // Check if any interactable object is in range
         bool anyInRange = false;
         string objectName = "";
-        
+
         foreach (var interactable in allInteractables)
         {
             if (interactable != null && interactable.IsPlayerInRange())
@@ -125,9 +125,9 @@ public class InteractionUI : MonoBehaviour
                 break;
             }
         }
-        
+
         interactionHint.SetActive(anyInRange);
-        
+
         if (anyInRange && hintText != null)
         {
             hintText.text = $"Press E to interact with {objectName}";
