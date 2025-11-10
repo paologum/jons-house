@@ -30,16 +30,16 @@ public class MultiTileBrush : GridBrush
             worldPos = grid.CellToWorld(position);
 
         // Instantiate prefab as a child of the brushTarget (or grid) so it's organized under the Grid
-        GameObject parent = brushTarget.transform != null ? brushTarget : grid.gameObject;
+        Transform parentTransform = brushTarget != null ? brushTarget.transform : grid.transform;
 
         // Record undo
-        GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent as Transform);
+        GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parentTransform);
         if (instance != null)
         {
             Undo.RegisterCreatedObjectUndo(instance, "Paint MultiTile Prefab");
             instance.transform.position = worldPos;
             // snap to integer multiples of cell size within parent local space
-            instance.transform.SetParent(parent.transform, true);
+            instance.transform.SetParent(parentTransform, true);
         }
     }
 
