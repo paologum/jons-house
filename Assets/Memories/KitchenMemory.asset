@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
   m_Name: KitchenMemory
   m_EditorClassIdentifier: Assembly-CSharp::MemoryData
-  title: BURGER
+  title: BURGER TIME
   pages:
   - image: {fileID: 21300000, guid: 55edc6414f2ff4728bd17980d89621fc, type: 3}
-    caption: My love
+    caption: These burgers were SOOOO GOOD hehe
+    title: 
   - image: {fileID: 21300000, guid: 55edc6414f2ff4728bd17980d89621fc, type: 3}
     caption: My love
+    title: 
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

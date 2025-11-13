@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using TMPro;
 using System.Collections.Generic;
 
@@ -18,11 +19,17 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private Image leftPageImage;
     [Tooltip("Right page image (for two-page spread).")]
     [SerializeField] private Image rightPageImage;
+    [Tooltip("Optional RawImage used to render a VideoClip on the left page. If set, video pages will use this instead of the Image.")]
+    [SerializeField] private RawImage leftPageRawImage;
+    [Tooltip("Optional RawImage used to render a VideoClip on the right page. If set, video pages will use this instead of the Image.")]
+    [SerializeField] private RawImage rightPageRawImage;
     [Header("Book Controls")]
     [SerializeField] private Button leftArrowButton;
     [SerializeField] private Button rightArrowButton;
     [SerializeField] private TextMeshProUGUI leftPageCaptionText;
     [SerializeField] private TextMeshProUGUI rightPageCaptionText;
+    [SerializeField] private TextMeshProUGUI leftPageTitleText;
+    [SerializeField] private TextMeshProUGUI rightPageTitleText;
     [SerializeField] private TextMeshProUGUI pageIndexText;
     [SerializeField] private Button closeButton;
 
@@ -80,6 +87,12 @@ public class InteractionUI : MonoBehaviour
     // Keep original authored anchoredPositions so preview/show doesn't repeatedly
     // shift the images when preserveAuthoringRect is enabled.
     private Dictionary<RectTransform, Vector2> originalAnchoredPositions = new Dictionary<RectTransform, Vector2>();
+
+    // Video playback helpers (one per side)
+    private VideoPlayer leftVideoPlayer;
+    private RenderTexture leftVideoRT;
+    private VideoPlayer rightVideoPlayer;
+    private RenderTexture rightVideoRT;
 
     void Start()
     {
@@ -178,6 +191,32 @@ public class InteractionUI : MonoBehaviour
         currentPages = new MemoryData.MemoryPage[0];
         currentSpreadIndex = 0;
 
+        // Stop and cleanup any active video players and render textures
+        if (leftVideoPlayer != null)
+        {
+            try { leftVideoPlayer.Stop(); } catch { }
+            Object.DestroyImmediate(leftVideoPlayer.gameObject);
+            leftVideoPlayer = null;
+        }
+        if (leftVideoRT != null)
+        {
+            leftVideoRT.Release();
+            Object.DestroyImmediate(leftVideoRT);
+            leftVideoRT = null;
+        }
+        if (rightVideoPlayer != null)
+        {
+            try { rightVideoPlayer.Stop(); } catch { }
+            Object.DestroyImmediate(rightVideoPlayer.gameObject);
+            rightVideoPlayer = null;
+        }
+        if (rightVideoRT != null)
+        {
+            rightVideoRT.Release();
+            Object.DestroyImmediate(rightVideoRT);
+            rightVideoRT = null;
+        }
+
         // Restore any authored anchored positions that we modified for preview
         if (originalAnchoredPositions != null && originalAnchoredPositions.Count > 0)
         {
@@ -231,8 +270,12 @@ public class InteractionUI : MonoBehaviour
             // nothing to show
             if (leftPageImage != null) leftPageImage.gameObject.SetActive(false);
             if (rightPageImage != null) rightPageImage.gameObject.SetActive(false);
+            if (leftPageRawImage != null) leftPageRawImage.gameObject.SetActive(false);
+            if (rightPageRawImage != null) rightPageRawImage.gameObject.SetActive(false);
             if (leftPageCaptionText != null) leftPageCaptionText.gameObject.SetActive(false);
             if (rightPageCaptionText != null) rightPageCaptionText.gameObject.SetActive(false);
+            if (leftPageTitleText != null) leftPageTitleText.gameObject.SetActive(false);
+            if (rightPageTitleText != null) rightPageTitleText.gameObject.SetActive(false);
             if (leftArrowButton != null) leftArrowButton.gameObject.SetActive(false);
             if (rightArrowButton != null) rightArrowButton.gameObject.SetActive(false);
             if (pageIndexText != null) pageIndexText.gameObject.SetActive(false);
@@ -243,122 +286,205 @@ public class InteractionUI : MonoBehaviour
         int rightIndex = leftIndex + 1;
 
         // Helper to display a page into a target Image and caption
-        void ApplyPageTo(Image img, TextMeshProUGUI caption, int pageIndex)
+        void ApplyPageTo(Image img, RawImage raw, TextMeshProUGUI caption, TextMeshProUGUI sideTitle, int pageIndex, bool isLeftSide)
         {
-            if (img == null && caption == null) return;
+            if (img == null && raw == null && caption == null) return;
             if (pageIndex < 0 || pageIndex >= currentPages.Length)
             {
                 if (img != null) img.gameObject.SetActive(false);
+                if (raw != null) raw.gameObject.SetActive(false);
                 if (caption != null) caption.gameObject.SetActive(false);
+                if (sideTitle != null) sideTitle.gameObject.SetActive(false);
                 return;
             }
+
             var p = currentPages[pageIndex];
-            if (img != null)
+
+            // If the page contains a video, prefer the RawImage + VideoPlayer path
+            if (p.video != null)
             {
-                if (p.image != null)
+                if (img != null) img.gameObject.SetActive(false);
+
+                if (raw != null)
                 {
-                    img.sprite = p.image;
-                    img.gameObject.SetActive(true);
-                    img.color = Color.white;
-                    img.preserveAspect = true;
-                    img.type = Image.Type.Simple;
-                    img.enabled = true;
-                    img.raycastTarget = false;
+                    raw.gameObject.SetActive(true);
 
-                    // Compute scaling so the sprite fits inside the parent page area while preserving aspect
-                    RectTransform parentRt = img.transform.parent as RectTransform;
-                    var rt = img.rectTransform;
+                    VideoPlayer vp = isLeftSide ? leftVideoPlayer : rightVideoPlayer;
+                    RenderTexture rtTex = isLeftSide ? leftVideoRT : rightVideoRT;
 
-                    // If the immediate parent has an invalid rect (0 size), walk up until we find a sized ancestor
-                    Transform search = img.transform.parent;
+                    // choose target size from parent rect
+                    RectTransform parentRt = raw.transform.parent as RectTransform;
+                    Transform search = raw.transform.parent;
                     while ((parentRt == null || parentRt.rect.width < 2f || parentRt.rect.height < 2f) && search != null && search.parent != null)
                     {
                         search = search.parent;
                         parentRt = search as RectTransform;
                     }
+                    Vector2 parentSize = parentRt != null ? parentRt.rect.size : raw.rectTransform.rect.size;
+                    int texW = Mathf.Max(16, Mathf.CeilToInt(parentSize.x));
+                    int texH = Mathf.Max(16, Mathf.CeilToInt(parentSize.y));
 
-                    Vector2 parentSize = parentRt != null ? parentRt.rect.size : rt.rect.size;
-
-                    // Debug info to help diagnose alignment issues
-                    Debug.Log($"InteractionUI: ApplyPageTo parent='{(parentRt != null ? parentRt.name : "<none>")}' parentSize={parentSize} for image='{p.image.name}'", this);
-
-                    // available area after margins
-                    float availW = Mathf.Max(1f, parentSize.x - pageMarginLeft - pageMarginRight);
-                    float availH = Mathf.Max(1f, parentSize.y - pageMarginTop - pageMarginBottom);
-
-                    // sprite pixel size
-                    var spr = p.image;
-                    Vector2 spriteSize = new Vector2(spr.rect.width, spr.rect.height);
-
-                    // scale factor in pixels
-                    float scale = Mathf.Min(availW / spriteSize.x, availH / spriteSize.y);
-                    Vector2 finalSize = spriteSize * scale;
-
-                    // Apply max size limits (explicit pixel limit takes precedence)
-                    float maxW = (maxSizePixels.x > 0f) ? maxSizePixels.x : parentSize.x * Mathf.Clamp01(maxWidthPercent);
-                    float maxH = (maxSizePixels.y > 0f) ? maxSizePixels.y : parentSize.y * Mathf.Clamp01(maxHeightPercent);
-                    finalSize.x = Mathf.Min(finalSize.x, maxW);
-                    finalSize.y = Mathf.Min(finalSize.y, maxH);
-
-
-                    // Apply size & position. If the author manually set up the RectTransform
-                    // in the Editor and `preserveAuthoringRect` is enabled, don't override
-                    // anchors/pivot/anchoredPosition — only update sizeDelta so the image
-                    // fills the intended area without losing your manual layout.
-                    // compute horizontal center offset inside the parent after margins
-                    // positive means shift right, negative shift left.
-                    float centerOffsetX = (pageMarginRight - pageMarginLeft) * 0.5f;
-
-                    if (preserveAuthoringRect)
+                    if (rtTex == null || rtTex.width != texW || rtTex.height != texH)
                     {
-                        // When preserving authoring rect, sizeDelta should be set while
-                        // keeping anchors/pivot so the element continues to scale nicely
-                        // with its parent across different screen sizes. We apply the
-                        // horizontal offset relative to the original authored anchored
-                        // position to avoid cumulative shifts when ShowMemory is called
-                        // multiple times (e.g. using the Inspector Preview button).
-                        if (rt != null)
+                        if (isLeftSide)
                         {
-                            if (!originalAnchoredPositions.ContainsKey(rt))
-                            {
-                                originalAnchoredPositions[rt] = rt.anchoredPosition;
-                            }
-                            Vector2 baseAnch = originalAnchoredPositions[rt];
-                            rt.sizeDelta = finalSize;
-                            rt.anchoredPosition = new Vector2(baseAnch.x + centerOffsetX, baseAnch.y);
+                            if (leftVideoRT != null) { leftVideoRT.Release(); Object.DestroyImmediate(leftVideoRT); }
+                            leftVideoRT = new RenderTexture(texW, texH, 0, RenderTextureFormat.ARGB32);
+                            rtTex = leftVideoRT;
                         }
                         else
                         {
-                            rt.sizeDelta = finalSize;
+                            if (rightVideoRT != null) { rightVideoRT.Release(); Object.DestroyImmediate(rightVideoRT); }
+                            rightVideoRT = new RenderTexture(texW, texH, 0, RenderTextureFormat.ARGB32);
+                            rtTex = rightVideoRT;
+                        }
+                    }
+
+                    if (vp == null)
+                    {
+                        var go = new GameObject(isLeftSide ? "_LeftVideoPlayer" : "_RightVideoPlayer");
+                        go.hideFlags = HideFlags.HideAndDontSave;
+                        go.transform.SetParent(this.transform, false);
+                        vp = go.AddComponent<VideoPlayer>();
+                        vp.playOnAwake = false;
+                        vp.renderMode = VideoRenderMode.RenderTexture;
+                        vp.skipOnDrop = true;
+                        vp.audioOutputMode = VideoAudioOutputMode.None;
+                        if (isLeftSide) leftVideoPlayer = vp; else rightVideoPlayer = vp;
+                    }
+
+                    vp.targetTexture = rtTex;
+                    raw.texture = rtTex;
+                    vp.clip = p.video;
+                    vp.isLooping = p.videoLoop;
+                    if (p.videoAutoplay)
+                    {
+                        vp.Stop();
+                        vp.Play();
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("InteractionUI: page contains a video but no RawImage assigned for this side.", this);
+                }
+            }
+            else
+            {
+                // If we previously had a video player on this side, stop it and detach the render texture
+                if (isLeftSide)
+                {
+                    if (leftVideoPlayer != null)
+                    {
+                        try { leftVideoPlayer.Stop(); } catch { }
+                        leftVideoPlayer.targetTexture = null;
+                    }
+                    if (leftPageRawImage != null) leftPageRawImage.texture = null;
+                }
+                else
+                {
+                    if (rightVideoPlayer != null)
+                    {
+                        try { rightVideoPlayer.Stop(); } catch { }
+                        rightVideoPlayer.targetTexture = null;
+                    }
+                    if (rightPageRawImage != null) rightPageRawImage.texture = null;
+                }
+
+                if (raw != null) raw.gameObject.SetActive(false);
+                if (img != null)
+                {
+                    if (p.image != null)
+                    {
+                        img.sprite = p.image;
+                        img.gameObject.SetActive(true);
+                        img.color = Color.white;
+                        img.preserveAspect = true;
+                        img.type = Image.Type.Simple;
+                        img.enabled = true;
+                        img.raycastTarget = false;
+
+                        // Compute scaling so the sprite fits inside the parent page area while preserving aspect
+                        RectTransform parentRt2 = img.transform.parent as RectTransform;
+                        var rt2 = img.rectTransform;
+
+                        // If the immediate parent has an invalid rect (0 size), walk up until we find a sized ancestor
+                        Transform search2 = img.transform.parent;
+                        while ((parentRt2 == null || parentRt2.rect.width < 2f || parentRt2.rect.height < 2f) && search2 != null && search2.parent != null)
+                        {
+                            search2 = search2.parent;
+                            parentRt2 = search2 as RectTransform;
+                        }
+
+                        Vector2 parentSize = parentRt2 != null ? parentRt2.rect.size : rt2.rect.size;
+
+                        // available area after margins
+                        float availW = Mathf.Max(1f, parentSize.x - pageMarginLeft - pageMarginRight);
+                        float availH = Mathf.Max(1f, parentSize.y - pageMarginTop - pageMarginBottom);
+
+                        // sprite pixel size
+                        var spr = p.image;
+                        Vector2 spriteSize = new Vector2(spr.rect.width, spr.rect.height);
+
+                        // scale factor in pixels
+                        float scale = Mathf.Min(availW / spriteSize.x, availH / spriteSize.y);
+                        Vector2 finalSize = spriteSize * scale;
+
+                        // Apply max size limits (explicit pixel limit takes precedence)
+                        float maxW = (maxSizePixels.x > 0f) ? maxSizePixels.x : parentSize.x * Mathf.Clamp01(maxWidthPercent);
+                        float maxH = (maxSizePixels.y > 0f) ? maxSizePixels.y : parentSize.y * Mathf.Clamp01(maxHeightPercent);
+                        finalSize.x = Mathf.Min(finalSize.x, maxW);
+                        finalSize.y = Mathf.Min(finalSize.y, maxH);
+
+                        // compute horizontal center offset inside the parent after margins
+                        float centerOffsetX = (pageMarginRight - pageMarginLeft) * 0.5f;
+
+                        if (preserveAuthoringRect)
+                        {
+                            if (rt2 != null)
+                            {
+                                if (!originalAnchoredPositions.ContainsKey(rt2))
+                                {
+                                    originalAnchoredPositions[rt2] = rt2.anchoredPosition;
+                                }
+                                Vector2 baseAnch = originalAnchoredPositions[rt2];
+                                rt2.sizeDelta = finalSize;
+                                rt2.anchoredPosition = new Vector2(baseAnch.x + centerOffsetX, baseAnch.y);
+                            }
+                            else
+                            {
+                                rt2.sizeDelta = finalSize;
+                            }
+                        }
+                        else
+                        {
+                            rt2.anchorMin = rt2.anchorMax = new Vector2(0.5f, 1f);
+                            rt2.pivot = new Vector2(0.5f, 1f);
+                            rt2.sizeDelta = finalSize;
+                            rt2.anchoredPosition = new Vector2(centerOffsetX, -pageMarginTop);
                         }
                     }
                     else
                     {
-                        // Anchor to top-center inside parent and set size in pixels
-                        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
-                        rt.pivot = new Vector2(0.5f, 1f);
-                        rt.sizeDelta = finalSize;
-                        // position: x=centerOffsetX to respect asymmetric left/right margins,
-                        // y = -topMargin
-                        rt.anchoredPosition = new Vector2(centerOffsetX, -pageMarginTop);
+                        img.gameObject.SetActive(false);
                     }
-
-                    Debug.Log($"InteractionUI: rt.anchorMin={rt.anchorMin} anchorMax={rt.anchorMax} pivot={rt.pivot} sizeDelta={rt.sizeDelta} anchoredPos={rt.anchoredPosition}", this);
-                }
-                else
-                {
-                    img.gameObject.SetActive(false);
                 }
             }
+
             if (caption != null)
             {
                 caption.text = p.caption ?? "";
                 caption.gameObject.SetActive(!string.IsNullOrEmpty(p.caption));
             }
+
+            if (sideTitle != null)
+            {
+                sideTitle.text = (p.title != null) ? p.title : "";
+                sideTitle.gameObject.SetActive(!string.IsNullOrEmpty(sideTitle.text));
+            }
         }
 
-        ApplyPageTo(leftPageImage, leftPageCaptionText, leftIndex);
-        ApplyPageTo(rightPageImage, rightPageCaptionText, rightIndex);
+        ApplyPageTo(leftPageImage, leftPageRawImage, leftPageCaptionText, leftPageTitleText, leftIndex, true);
+        ApplyPageTo(rightPageImage, rightPageRawImage, rightPageCaptionText, rightPageTitleText, rightIndex, false);
 
         // Arrows visible only when there is more than one page
         int totalPages = currentPages.Length;

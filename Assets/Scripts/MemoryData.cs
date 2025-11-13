@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Video;
 
 /// <summary>
 /// ScriptableObject to store memory data for interactable objects.
@@ -16,6 +17,15 @@ public class MemoryData : ScriptableObject
         public Sprite image;
         [TextArea(2, 6)]
         public string caption;
+        [Tooltip("Optional small title shown above the page (e.g. a short label)")]
+        public string title;
+        [Header("Video (optional)")]
+        [Tooltip("Optional VideoClip to play on this page instead of a static image.")]
+        public VideoClip video;
+        [Tooltip("If true, the video will loop while the page is visible.")]
+        public bool videoLoop = false;
+        [Tooltip("If true, the video will autoplay when the page is shown.")]
+        public bool videoAutoplay = true;
     }
 
     [Header("Pages")]
