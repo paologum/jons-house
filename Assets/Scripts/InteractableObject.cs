@@ -6,11 +6,9 @@ using UnityEngine;
 /// </summary>
 public class InteractableObject : MonoBehaviour
 {
-    [Header("Memory Information")]
-    [SerializeField] private string memoryTitle = "Memory Title";
-    [TextArea(3, 6)]
-    [SerializeField] private string memoryStory = "This is the story of this memory...";
-    [SerializeField] private Sprite memoryImage;
+    [Header("Memory Data")]
+    [Tooltip("MemoryData ScriptableObject containing one or more pages. Required for interaction display.")]
+    [SerializeField] private MemoryData memoryDataAsset;
 
     [Header("Interaction Settings")]
     [SerializeField] private float interactionRange = 1f;
@@ -109,7 +107,14 @@ public class InteractableObject : MonoBehaviour
     {
         if (interactionUI != null)
         {
-            interactionUI.ShowMemory(memoryTitle, memoryStory, memoryImage);
+            if (memoryDataAsset != null)
+            {
+                interactionUI.ShowMemory(memoryDataAsset);
+            }
+            else
+            {
+                Debug.LogWarning($"InteractableObject '{gameObject.name}' has no MemoryData assigned.", this);
+            }
         }
     }
 
