@@ -16,4 +16,6 @@ MonoBehaviour:
   pages:
   - image: {fileID: 21300000, guid: 55edc6414f2ff4728bd17980d89621fc, type: 3}
     caption: My love
+  - image: {fileID: 21300000, guid: 55edc6414f2ff4728bd17980d89621fc, type: 3}
+    caption: My love
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
