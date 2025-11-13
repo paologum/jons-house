@@ -95,4 +95,4 @@ crashlytics-build.properties
 # Ignore private memory images folder so personal images aren't committed
 /Assets/Memories/Images/
 # Also ignore any nested images folder under Assets/Memories (case-insensitive)
-/[Aa]ssets/[Mm]emories/[Ii]mages/
+/[Aa]ssets/[Mm]emories/[Ii]mages/*
