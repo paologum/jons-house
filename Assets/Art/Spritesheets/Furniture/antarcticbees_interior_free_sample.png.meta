@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -115,7 +115,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 96
-        width: 80
+        width: 1
         height: 80
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -527,6 +527,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: antarcticbees_interior_free_sample_19
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 16
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ab42a52d0e884806abf5f747c6390ce
+      internalID: 1986998762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: antarcticbees_interior_free_sample_20
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 127
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 749d8ad55fa66488b8bf2b99126a5c2b
+      internalID: -1111229864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -554,7 +598,9 @@ TextureImporter:
       antarcticbees_interior_free_sample_16: -843542334
       antarcticbees_interior_free_sample_17: 593776074
       antarcticbees_interior_free_sample_18: 1202467795
+      antarcticbees_interior_free_sample_19: 1986998762
       antarcticbees_interior_free_sample_2: 1272765268
+      antarcticbees_interior_free_sample_20: -1111229864
       antarcticbees_interior_free_sample_3: -5455885
       antarcticbees_interior_free_sample_4: -1070664815
       antarcticbees_interior_free_sample_5: 8102498
