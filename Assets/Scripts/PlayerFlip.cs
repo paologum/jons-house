@@ -34,9 +34,49 @@ public class PlayerFlip : MonoBehaviour
             else if (moveX > 0f) sr.flipX = false;
         }
 
+        // Safely update animator parameter only if it exists. Many animator controllers
+        // don't include a 'Speed' float — calling SetFloat with a missing parameter
+        // will log repeated errors in the console. We cache checks and warn once.
         if (animator != null && !string.IsNullOrEmpty(speedParameter))
         {
-            animator.SetFloat(speedParameter, Mathf.Abs(moveX));
+            // lazy-check animator parameters and cache result
+            if (!_hasCheckedSpeedParam)
+            {
+                _hasCheckedSpeedParam = true;
+                _hasSpeedParam = false;
+                try
+                {
+                    var pars = animator.parameters;
+                    for (int i = 0; i < pars.Length; i++)
+                    {
+                        if (pars[i].name == speedParameter && pars[i].type == UnityEngine.AnimatorControllerParameterType.Float)
+                        {
+                            _hasSpeedParam = true;
+                            break;
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    // In some runtimes accessing parameters can throw; treat as "not present".
+                    _hasSpeedParam = false;
+                }
+            }
+
+            if (_hasSpeedParam)
+            {
+                animator.SetFloat(speedParameter, Mathf.Abs(moveX));
+            }
+            else if (!_warnedMissingSpeedParam)
+            {
+                _warnedMissingSpeedParam = true;
+                Debug.LogWarning($"PlayerFlip: Animator does not contain a float parameter named '{speedParameter}'. Set the parameter in the Animator or clear the field on the PlayerFlip component to disable animator updates.", this);
+            }
         }
     }
+
+    // cached checks to avoid per-frame reflection-like work
+    private bool _hasCheckedSpeedParam = false;
+    private bool _hasSpeedParam = false;
+    private bool _warnedMissingSpeedParam = false;
 }

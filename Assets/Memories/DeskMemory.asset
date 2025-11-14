@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
+  m_Name: DeskMemory
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryData
+  title: 
+  pages:
+  - image: {fileID: 21300000, guid: 2392b43c2f01c4c7e87e6b42418eaaea, type: 3}
+    caption: I think you look so so so pretty. You should try this more baby:)
+    title: WAHHH
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: WAHHH I CAN'T MY BABY SO PRETTYTYTYYTYT
+    title: hehehehe
+    video: {fileID: 32900000, guid: 7ebb90eda83754b8ca16e21e27097dbe, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: heheheeh
+    title: hehehehe
+    video: {fileID: 32900000, guid: 3230c06ec35bb40219718964ffd26f9b, type: 3}
+    videoRotation: 270
+    videoLoop: 1
+    videoAutoplay: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

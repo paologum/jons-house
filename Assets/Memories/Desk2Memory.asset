@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
+  m_Name: Desk2Memory
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryData
+  title: 
+  pages:
+  - image: {fileID: 0}
+    caption: Whoa you are insane here like wow
+    title: Fine ahh girl
+    video: {fileID: 32900000, guid: 4c04b8a3dd6474a9e9538f4a89e361df, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: You look so good in my hat<3333
+    title: HI BABBYYYY
+    video: {fileID: 32900000, guid: 208691a0ddb7f4b60b15a539f2a9b9cf, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

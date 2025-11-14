@@ -53,6 +53,30 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private float pageMarginRight = 40f;
     [Tooltip("If true, respect RectTransform setup you made in the Editor and only set image sizeDelta. If false, the script will force anchors/pivot/position for top-aligned layout.")]
     [SerializeField] private bool preserveAuthoringRect = true;
+
+    [Header("Caption Sizing")]
+    [Tooltip("When true, TextMeshPro captions will auto-size between Min and Max font sizes to fit their Rect.")]
+    [SerializeField] private bool captionAutoSize = true;
+    [Tooltip("Minimum font size for caption auto-sizing.")]
+    [SerializeField] private float captionFontMin = 12f;
+    [Tooltip("Maximum font size for caption auto-sizing.")]
+    [SerializeField] private float captionFontMax = 28f;
+    [Tooltip("If >0, the caption RectTransform will expand up to this height (in pixels). Set 0 to allow unlimited height.")]
+    [SerializeField] private float captionMaxHeight = 300f;
+    [Tooltip("Extra padding (pixels) added when computing caption preferred height.")]
+    [SerializeField] private float captionPadding = 6f;
+
+    [Header("Title Sizing")]
+    [Tooltip("When true, TextMeshPro titles will auto-size between Min and Max font sizes to fit their Rect.")]
+    [SerializeField] private bool titleAutoSize = true;
+    [Tooltip("Minimum font size for title auto-sizing.")]
+    [SerializeField] private float titleFontMin = 12f;
+    [Tooltip("Maximum font size for title auto-sizing.")]
+    [SerializeField] private float titleFontMax = 20f;
+    [Tooltip("If >0, the title RectTransform will expand up to this height (in pixels). Set 0 to allow unlimited height.")]
+    [SerializeField] private float titleMaxHeight = 80f;
+    [Tooltip("Extra padding (pixels) added when computing title preferred height.")]
+    [SerializeField] private float titlePadding = 4f;
     [Header("Size Limits")]
     [Tooltip("Maximum fraction of the parent page area the image may fill (0..1). Applied when maxSizePixels is zero.")]
     [Range(0f, 1f)]
@@ -66,6 +90,14 @@ public class InteractionUI : MonoBehaviour
     private Vector2 maxSizePixels = Vector2.zero;
 
     private InteractableObject[] allInteractables;
+
+    [Header("Video Debug")]
+    [Tooltip("If enabled, show a small debug overlay in Play mode that reports VideoPlayer state for each page side.")]
+    [SerializeField]
+    private bool enableVideoDebugOverlay = false;
+
+    // runtime debug overlay (created on demand)
+    private TextMeshProUGUI _videoDebugOverlay;
 
     [Header("Responsive")]
     [Tooltip("When enabled, the UI will automatically refresh page layout when the panel or canvas size changes (responsive to resolution/aspect).")]
@@ -93,6 +125,9 @@ public class InteractionUI : MonoBehaviour
     private RenderTexture leftVideoRT;
     private VideoPlayer rightVideoPlayer;
     private RenderTexture rightVideoRT;
+    // Last applied rotation angles per side (for debug overlay)
+    private int leftVideoRotation = 0;
+    private int rightVideoRotation = 0;
 
     void Start()
     {
@@ -121,6 +156,82 @@ public class InteractionUI : MonoBehaviour
 
         // Find all interactable objects (use newer API to avoid deprecated call)
         allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
+    }
+
+    private Vector3 GetWorldCenter(RectTransform rt)
+    {
+        if (rt == null) return Vector3.zero;
+        var corners = new Vector3[4];
+        rt.GetWorldCorners(corners);
+        return (corners[0] + corners[1] + corners[2] + corners[3]) * 0.25f;
+    }
+
+    private void EnsureVideoDebugOverlay()
+    {
+        if (_videoDebugOverlay != null) return;
+        if (memoryPanel == null) return;
+
+        // Try to find an existing child named _VideoDebugOverlay
+        var existing = memoryPanel.transform.Find("_VideoDebugOverlay");
+        if (existing != null)
+        {
+            _videoDebugOverlay = existing.GetComponent<TextMeshProUGUI>();
+            if (_videoDebugOverlay != null) return;
+        }
+
+        // Create a small TextMeshProUGUI under the panel for debug output
+        var go = new GameObject("_VideoDebugOverlay", typeof(RectTransform));
+        go.hideFlags = HideFlags.DontSave;
+        go.transform.SetParent(memoryPanel.transform, false);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(1f, 0f);
+        rt.anchorMax = new Vector2(1f, 0f);
+        rt.pivot = new Vector2(1f, 0f);
+        rt.sizeDelta = new Vector2(320f, 120f);
+        rt.anchoredPosition = new Vector2(-10f, 10f);
+
+        // Add TextMeshProUGUI if available
+        try
+        {
+            var tmp = go.AddComponent<TextMeshProUGUI>();
+            tmp.fontSize = 12f;
+            tmp.enableWordWrapping = true;
+            tmp.color = Color.yellow;
+            tmp.alignment = TextAlignmentOptions.TopRight;
+            tmp.raycastTarget = false;
+            _videoDebugOverlay = tmp;
+        }
+        catch
+        {
+            // If TMP isn't available for some reason, fall back to no overlay.
+            Object.DestroyImmediate(go);
+            _videoDebugOverlay = null;
+        }
+    }
+
+    private void UpdateVideoDebugOverlay()
+    {
+        if (!enableVideoDebugOverlay) return;
+        if (memoryPanel == null || !memoryPanel.activeSelf) return;
+        EnsureVideoDebugOverlay();
+        if (_videoDebugOverlay == null) return;
+
+        string leftStatus = "none";
+        if (leftVideoPlayer != null)
+        {
+            leftStatus = $"clip={leftVideoPlayer.clip?.name ?? "-"} prepared={leftVideoPlayer.isPrepared} playing={leftVideoPlayer.isPlaying} rt={leftVideoRT?.width}x{leftVideoRT?.height} rot={leftVideoRotation}°";
+        }
+
+        string rightStatus = "none";
+        if (rightVideoPlayer != null)
+        {
+            rightStatus = $"clip={rightVideoPlayer.clip?.name ?? "-"} prepared={rightVideoPlayer.isPrepared} playing={rightVideoPlayer.isPlaying} rt={rightVideoRT?.width}x{rightVideoRT?.height} rot={rightVideoRotation}°";
+        }
+
+        _videoDebugOverlay.text = "Video Debug:\n" +
+            $"Left: {leftStatus}\n" +
+            $"Right: {rightStatus}\n" +
+            $"(Enable/disable via InteractionUI.enableVideoDebugOverlay)";
     }
 
     void Update()
@@ -168,6 +279,12 @@ public class InteractionUI : MonoBehaviour
                 lastLayoutSize = currentSize;
                 lastCanvasScale = scale;
             }
+        }
+
+        // Update video debug overlay each frame when visible
+        if (enableVideoDebugOverlay && memoryPanel != null && memoryPanel.activeSelf)
+        {
+            UpdateVideoDebugOverlay();
         }
     }
 
@@ -312,7 +429,7 @@ public class InteractionUI : MonoBehaviour
                     VideoPlayer vp = isLeftSide ? leftVideoPlayer : rightVideoPlayer;
                     RenderTexture rtTex = isLeftSide ? leftVideoRT : rightVideoRT;
 
-                    // choose target size from parent rect
+                    // choose target size from parent rect (we'll create an RT sized to preserve the video's aspect)
                     RectTransform parentRt = raw.transform.parent as RectTransform;
                     Transform search = raw.transform.parent;
                     while ((parentRt == null || parentRt.rect.width < 2f || parentRt.rect.height < 2f) && search != null && search.parent != null)
@@ -321,8 +438,40 @@ public class InteractionUI : MonoBehaviour
                         parentRt = search as RectTransform;
                     }
                     Vector2 parentSize = parentRt != null ? parentRt.rect.size : raw.rectTransform.rect.size;
-                    int texW = Mathf.Max(16, Mathf.CeilToInt(parentSize.x));
-                    int texH = Mathf.Max(16, Mathf.CeilToInt(parentSize.y));
+
+                    // available area after margins
+                    float availW = Mathf.Max(1f, parentSize.x - pageMarginLeft - pageMarginRight);
+                    float availH = Mathf.Max(1f, parentSize.y - pageMarginTop - pageMarginBottom);
+
+                    // try to read clip's native pixel size; fall back to parent size
+                    int nativeW = (p.video != null && p.video.width > 0) ? (int)p.video.width : Mathf.Max(16, Mathf.CeilToInt(parentSize.x));
+                    int nativeH = (p.video != null && p.video.height > 0) ? (int)p.video.height : Mathf.Max(16, Mathf.CeilToInt(parentSize.y));
+
+                    // read rotation hint from the page (designer-controlled). If rotation is 90/270,
+                    // we'll treat the displayed dimensions as swapped (width<->height) and rotate the RawImage rect.
+                    int rotationAngle = 0;
+                    try { rotationAngle = (int)p.videoRotation; } catch { rotationAngle = 0; }
+                    bool swapDims = (rotationAngle == 90 || rotationAngle == 270);
+
+                    // Compute a base final size using the video's native orientation (no swap)
+                    // This makes rotation affect only orientation, not the computed fit size.
+                    float scale = Mathf.Min(availW / (float)nativeW, availH / (float)nativeH);
+                    scale = Mathf.Max(0.01f, scale);
+                    Vector2 baseFinal = new Vector2(nativeW * scale, nativeH * scale);
+
+                    // If the video is rotated 90/270, swap the assigned size so the rotated
+                    // visual occupies the same area (just rotated) instead of shrinking.
+                    Vector2 finalSize = swapDims ? new Vector2(baseFinal.y, baseFinal.x) : baseFinal;
+
+                    // Apply max size limits (explicit pixel limit takes precedence)
+                    float maxW = (maxSizePixels.x > 0f) ? maxSizePixels.x : parentSize.x * Mathf.Clamp01(maxWidthPercent);
+                    float maxH = (maxSizePixels.y > 0f) ? maxSizePixels.y : parentSize.y * Mathf.Clamp01(maxHeightPercent);
+                    finalSize.x = Mathf.Min(finalSize.x, maxW);
+                    finalSize.y = Mathf.Min(finalSize.y, maxH);
+
+                    // Create the RenderTexture sized to the video's unrotated pixel dimensions (baseFinal)
+                    int texW = Mathf.Max(16, Mathf.CeilToInt(baseFinal.x));
+                    int texH = Mathf.Max(16, Mathf.CeilToInt(baseFinal.y));
 
                     if (rtTex == null || rtTex.width != texW || rtTex.height != texH)
                     {
@@ -338,6 +487,55 @@ public class InteractionUI : MonoBehaviour
                             rightVideoRT = new RenderTexture(texW, texH, 0, RenderTextureFormat.ARGB32);
                             rtTex = rightVideoRT;
                         }
+                    }
+
+                    // Update RawImage rect to preserve aspect ratio and fit inside the page area
+                    var rawRt = raw.rectTransform;
+                    float centerOffsetX = (pageMarginRight - pageMarginLeft) * 0.5f;
+                    // Preserve visual center while changing pivot/size when rotating so the image
+                    // doesn't suddenly shift. We'll compute world center before/after sizing and
+                    // adjust the RectTransform position to cancel the displacement.
+                    Vector3 oldCenter = Vector3.zero;
+                    if (rotationAngle != 0)
+                    {
+                        oldCenter = GetWorldCenter(rawRt);
+                    }
+
+                    if (preserveAuthoringRect)
+                    {
+                        if (!originalAnchoredPositions.ContainsKey(rawRt))
+                        {
+                            originalAnchoredPositions[rawRt] = rawRt.anchoredPosition;
+                        }
+                        var baseAnch = originalAnchoredPositions[rawRt];
+                        rawRt.sizeDelta = finalSize;
+                        rawRt.anchoredPosition = new Vector2(baseAnch.x + centerOffsetX, baseAnch.y);
+                    }
+                    else
+                    {
+                        rawRt.anchorMin = rawRt.anchorMax = new Vector2(0.5f, 1f);
+                        // when rotating, use center pivot to avoid visual offset; otherwise keep top pivot
+                        rawRt.pivot = (rotationAngle != 0) ? new Vector2(0.5f, 0.5f) : new Vector2(0.5f, 1f);
+                        rawRt.sizeDelta = finalSize;
+                        rawRt.anchoredPosition = new Vector2(centerOffsetX, -pageMarginTop);
+                    }
+
+                    // Apply rotation to the RawImage so the video appears upright.
+                    rawRt.localEulerAngles = new Vector3(0f, 0f, rotationAngle);
+                    if (isLeftSide) leftVideoRotation = rotationAngle; else rightVideoRotation = rotationAngle;
+
+                    if (rotationAngle != 0)
+                    {
+                        // compute new center and move RectTransform so visual center is preserved
+                        Vector3 newCenter = GetWorldCenter(rawRt);
+                        Vector3 delta = newCenter - oldCenter;
+                        if (rawRt.parent != null)
+                        {
+                            // convert world delta to parent local space and adjust anchoredPosition
+                            Vector3 parentDelta = rawRt.parent.InverseTransformVector(delta);
+                            rawRt.anchoredPosition = rawRt.anchoredPosition - (Vector2)parentDelta;
+                        }
+                        Debug.Log($"InteractionUI: applied rotation {rotationAngle}° to {(isLeftSide ? "left" : "right")} RawImage for page {pageIndex}", this);
                     }
 
                     if (vp == null)
@@ -356,16 +554,53 @@ public class InteractionUI : MonoBehaviour
                     vp.targetTexture = rtTex;
                     raw.texture = rtTex;
                     vp.clip = p.video;
-                    vp.isLooping = p.videoLoop;
-                    if (p.videoAutoplay)
+                    // force looping and autoplay behaviour for memories
+                    vp.isLooping = true;
+                    vp.skipOnDrop = true;
+                    vp.audioOutputMode = VideoAudioOutputMode.None;
+                    vp.renderMode = VideoRenderMode.RenderTexture;
+
+                    // ensure RenderTexture is created before playing
+                    try
                     {
-                        vp.Stop();
-                        vp.Play();
+                        if (rtTex != null && !rtTex.IsCreated()) rtTex.Create();
+                    }
+                    catch { }
+
+                    // Use Prepare/prepareCompleted to avoid black-frame issues on some platforms
+                    VideoPlayer.EventHandler handler = null;
+                    handler = (VideoPlayer src) =>
+                    {
+                        try { src.Play(); } catch { }
+                        // unsubscribe
+                        try { src.prepareCompleted -= handler; } catch { }
+                    };
+
+                    try
+                    {
+                    src:;
+                        vp.prepareCompleted += handler;
+                        vp.Prepare();
+                        Debug.Log($"InteractionUI: preparing video for page (width={rtTex.width},height={rtTex.height}) clip={p.video}", this);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning($"InteractionUI: Video Prepare failed: {ex.Message}. Attempting direct Play.", this);
+                        try { vp.Play(); } catch { }
                     }
                 }
                 else
                 {
-                    Debug.LogWarning("InteractionUI: page contains a video but no RawImage assigned for this side.", this);
+                    string sideName = isLeftSide ? "left" : "right";
+                    Debug.LogWarning($"InteractionUI: page {pageIndex} (side={sideName}) contains a video but no RawImage assigned for this side. Assign '{(isLeftSide ? nameof(leftPageRawImage) : nameof(rightPageRawImage))}' on the InteractionUI component to enable video playback.", this);
+                    if (enableVideoDebugOverlay)
+                    {
+                        EnsureVideoDebugOverlay();
+                        if (_videoDebugOverlay != null)
+                        {
+                            _videoDebugOverlay.text = $"Side: {sideName}\nPage: {pageIndex}\nStatus: No RawImage assigned — cannot play video.\nAssign '{(isLeftSide ? "leftPageRawImage" : "rightPageRawImage")}' in the inspector.";
+                        }
+                    }
                 }
             }
             else
@@ -474,12 +709,76 @@ public class InteractionUI : MonoBehaviour
             {
                 caption.text = p.caption ?? "";
                 caption.gameObject.SetActive(!string.IsNullOrEmpty(p.caption));
+
+                if (captionAutoSize)
+                {
+                    caption.enableAutoSizing = true;
+                    caption.fontSizeMin = captionFontMin;
+                    caption.fontSizeMax = captionFontMax;
+                }
+                else
+                {
+                    caption.enableAutoSizing = false;
+                }
+
+                // Force mesh update so preferredHeight is accurate when we adjust container size
+                caption.ForceMeshUpdate();
+
+                if (captionMaxHeight > 0f)
+                {
+                    float needed = caption.preferredHeight + captionPadding;
+                    float clamped = Mathf.Min(needed, captionMaxHeight);
+                    RectTransform crt = caption.rectTransform;
+                    Vector2 size = crt.sizeDelta;
+                    // Only adjust height if different (avoid layout churn)
+                    if (!Mathf.Approximately(size.y, clamped))
+                    {
+                        crt.sizeDelta = new Vector2(size.x, clamped);
+                        // If this caption is inside a LayoutGroup, force rebuild
+                        var parent = crt.parent as RectTransform;
+                        if (parent != null)
+                        {
+                            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(parent);
+                        }
+                    }
+                }
             }
 
             if (sideTitle != null)
             {
                 sideTitle.text = (p.title != null) ? p.title : "";
                 sideTitle.gameObject.SetActive(!string.IsNullOrEmpty(sideTitle.text));
+
+                if (titleAutoSize)
+                {
+                    sideTitle.enableAutoSizing = true;
+                    sideTitle.fontSizeMin = titleFontMin;
+                    sideTitle.fontSizeMax = titleFontMax;
+                }
+                else
+                {
+                    sideTitle.enableAutoSizing = false;
+                }
+
+                // Force update to compute preferred size
+                sideTitle.ForceMeshUpdate();
+
+                if (titleMaxHeight > 0f)
+                {
+                    float neededT = sideTitle.preferredHeight + titlePadding;
+                    float clampedT = Mathf.Min(neededT, titleMaxHeight);
+                    RectTransform trt = sideTitle.rectTransform;
+                    Vector2 tsize = trt.sizeDelta;
+                    if (!Mathf.Approximately(tsize.y, clampedT))
+                    {
+                        trt.sizeDelta = new Vector2(tsize.x, clampedT);
+                        var parentT = trt.parent as RectTransform;
+                        if (parentT != null)
+                        {
+                            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(parentT);
+                        }
+                    }
+                }
             }
         }
 

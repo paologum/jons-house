@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
+  m_Name: CouchMemory
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryData
+  title: 
+  pages:
+  - image: {fileID: 21300000, guid: 886c18c1e70294d4294b1f2b4d5d0112, type: 3}
+    caption: You hate this pic but it's so cute hehe
+    title: DEVIL JON RAH
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 0
+    videoAutoplay: 0
+  - image: {fileID: 21300000, guid: 1a12a4dcff0c14326af3dc0ad048f2e0, type: 3}
+    caption: I think you liked this but you threw it away :((
+    title: MANGO MANGO
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 0
+    videoAutoplay: 0
+  - image: {fileID: 21300000, guid: 99b569b16e3e4493ab1163c7c2065a55, type: 3}
+    caption: THIS WAS LIKE THE FIRST WEEK I WAS BACK AW
+    title: Pokemon Cards :)
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 0
+    videoAutoplay: 0
+  - image: {fileID: 21300000, guid: 2adef6b940c8648199b156ee786385a8, type: 3}
+    caption: you really like how i look but i hate alkdsjfalksjfa;l
+    title: AWWW
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 0
+    videoAutoplay: 0
+  - image: {fileID: 21300000, guid: ee7c74941c0fe4486bbd97195f6c49b0, type: 3}
+    caption: We barely drank this soju....
+    title: Soju Heart <3
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 0
+    videoAutoplay: 0
+  - image: {fileID: 0}
+    caption: 
+    title: How are you so hot
+    video: {fileID: 32900000, guid: 346e06198a1704c389a35c655dea6b63, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 21300000, guid: 861aab45331184485b632e35ceed4fb1, type: 3}
+    caption: 
+    title: Whoa....
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 21300000, guid: 85f883517fe874a1f9beadbcceb3efeb, type: 3}
+    caption: 
+    title: I LOVE THIS PIC OF YOU SM
+    video: {fileID: 0}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: You look so good with red baby :)
+    title: More flowers heheheh
+    video: {fileID: 32900000, guid: 0b54b35f064694872a7253145ac78aee, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: I loooove you baby
+    title: Face Mask
+    video: {fileID: 32900000, guid: 1a9cc1dfaa9be4b0790e8cb973369c7a, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: We crode so much :( Some interesting frames there too haha
+    title: Last day with lego...
+    video: {fileID: 32900000, guid: 0f011b9638c594b1b8f4cddbac084f27, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  - image: {fileID: 0}
+    caption: Sorry you just look so good so I included it again
+    title: Sexy
+    video: {fileID: 32900000, guid: 6ef6d7211dbda43558467b926d26cb0c, type: 3}
+    videoRotation: 0
+    videoLoop: 1
+    videoAutoplay: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

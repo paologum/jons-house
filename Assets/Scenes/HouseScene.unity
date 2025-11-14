@@ -963,11 +963,12 @@ RectTransform:
   - {fileID: 737154575}
   - {fileID: 1557831781}
   - {fileID: 1344200559}
+  - {fileID: 220288972}
   m_Father: {fileID: 706426342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -344.07495, y: 0}
+  m_AnchoredPosition: {x: -368.94, y: 0}
   m_SizeDelta: {x: 1921.8301, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &207358459
@@ -1098,6 +1099,78 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &220288971
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220288972}
+  - component: {fileID: 220288974}
+  - component: {fileID: 220288973}
+  m_Layer: 5
+  m_Name: LeftRawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &220288972
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220288971}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 207358458}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 25, y: -200}
+  m_SizeDelta: {x: 435, y: 580}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &220288973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220288971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &220288974
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220288971}
+  m_CullTransparentMesh: 1
 --- !u!1 &228036987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,8 +1426,8 @@ MonoBehaviour:
   bookBackground: {fileID: 706426343}
   leftPageImage: {fileID: 737154576}
   rightPageImage: {fileID: 1556241899}
-  leftPageRawImage: {fileID: 0}
-  rightPageRawImage: {fileID: 0}
+  leftPageRawImage: {fileID: 220288973}
+  rightPageRawImage: {fileID: 560604325}
   leftArrowButton: {fileID: 533031830}
   rightArrowButton: {fileID: 1877451650}
   leftPageCaptionText: {fileID: 1557831782}
@@ -1371,9 +1444,20 @@ MonoBehaviour:
   pageMarginLeft: 50
   pageMarginRight: 100
   preserveAuthoringRect: 0
+  captionAutoSize: 1
+  captionFontMin: 12
+  captionFontMax: 28
+  captionMaxHeight: 300
+  captionPadding: 6
+  titleAutoSize: 1
+  titleFontMin: 12
+  titleFontMax: 28
+  titleMaxHeight: 80
+  titlePadding: 4
   maxWidthPercent: 0.396
   maxHeightPercent: 0.379
   maxSizePixels: {x: 596, y: 674.7}
+  enableVideoDebugOverlay: 1
   enableResponsive: 1
   responsiveThreshold: 2.48
 --- !u!4 &276946525
@@ -2477,7 +2561,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1\u20132 / 2"
+  m_text: "1\u20132 / 3"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2926,7 +3010,7 @@ GameObject:
   - component: {fileID: 557608036}
   - component: {fileID: 557608037}
   m_Layer: 0
-  m_Name: furniture pack grey outline_33
+  m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3066,6 +3150,78 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &560604323
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 560604324}
+  - component: {fileID: 560604326}
+  - component: {fileID: 560604325}
+  m_Layer: 5
+  m_Name: RightRawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &560604324
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560604323}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1251780931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 25, y: -200}
+  m_SizeDelta: {x: 430.88214, y: 574.5095}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &560604325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560604323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &560604326
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560604323}
+  m_CullTransparentMesh: 1
 --- !u!1 &599394761
 GameObject:
   m_ObjectHideFlags: 0
@@ -3199,6 +3355,7 @@ GameObject:
   - component: {fileID: 603770095}
   - component: {fileID: 603770096}
   - component: {fileID: 603770097}
+  - component: {fileID: 603770098}
   m_Layer: 0
   m_Name: furniture pack grey outline_49
   m_TagString: Untagged
@@ -3325,6 +3482,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.9375, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &603770098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603770094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: a46c74e616f3741b4a847acf0dee3c5e, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &617135740
 GameObject:
   m_ObjectHideFlags: 0
@@ -5959,7 +6131,7 @@ Transform:
   m_GameObject: {fileID: 750155454}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.96, z: 0}
+  m_LocalPosition: {x: -2.11, y: -3.98, z: 0}
   m_LocalScale: {x: 1.2, y: 1.3500001, z: 1.5000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6654,6 +6826,7 @@ GameObject:
   - component: {fileID: 889545983}
   - component: {fileID: 889545984}
   - component: {fileID: 889545985}
+  - component: {fileID: 889545986}
   m_Layer: 0
   m_Name: TopDownHouse_FurnitureState1_28
   m_TagString: Untagged
@@ -6780,6 +6953,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6875, y: 1.71875}
   m_EdgeRadius: 0
+--- !u!114 &889545986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889545982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: 43b3a491bd6b54e05be900fca37c1289, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &899233885
 GameObject:
   m_ObjectHideFlags: 0
@@ -8195,12 +8383,13 @@ RectTransform:
   - {fileID: 1556241898}
   - {fileID: 1427385540}
   - {fileID: 1792023884}
+  - {fileID: 560604324}
   m_Father: {fileID: 706426342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -204, y: -2.744751}
-  m_SizeDelta: {x: 960, y: -5.490456}
+  m_AnchoredPosition: {x: -142, y: -2.744751}
+  m_SizeDelta: {x: 1084, y: -5.490456}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1251780932
 MonoBehaviour:
@@ -8275,7 +8464,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -120}
-  m_SizeDelta: {x: 714.9, y: 50}
+  m_SizeDelta: {x: 714.9, y: 35.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1344200560
 MonoBehaviour:
@@ -8297,7 +8486,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BURGER
+  m_text: BURGER TIMEEE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8324,12 +8513,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 28
   m_fontSizeBase: 48
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 28
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -9053,6 +9242,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1408925844}
   - component: {fileID: 1408925845}
+  - component: {fileID: 1408925846}
   m_Layer: 0
   m_Name: furniture pack grey outline_265
   m_TagString: Untagged
@@ -9133,6 +9323,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1408925846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408925843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: b7aa91851feea435990ecf0b76f19b75, type: 2}
+  interactionRange: 2
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &1427385539
 GameObject:
   m_ObjectHideFlags: 0
@@ -9168,7 +9373,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 101.68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1427385541
 MonoBehaviour:
@@ -9190,7 +9395,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: My love
+  m_text: Hydrangeas are sooo pretty on my baby :)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9220,9 +9425,9 @@ MonoBehaviour:
   m_fontSize: 28
   m_fontSizeBase: 28
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 28
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -10057,7 +10262,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 55edc6414f2ff4728bd17980d89621fc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 10538355fc94a4df6ba2d002da47c90c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10110,7 +10315,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 101.68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1557831782
 MonoBehaviour:
@@ -10132,7 +10337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: My love
+  m_text: These burgers were SOOOO GOOD hehe
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10162,9 +10367,9 @@ MonoBehaviour:
   m_fontSize: 28
   m_fontSizeBase: 28
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 28
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -13307,7 +13512,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -120}
-  m_SizeDelta: {x: 714.9, y: 50}
+  m_SizeDelta: {x: 714.9, y: 35.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1792023885
 MonoBehaviour:
@@ -13329,7 +13534,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BURGER
+  m_text: My cutie
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13356,12 +13561,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 28
   m_fontSizeBase: 48
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
+  m_fontSizeMax: 28
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -14469,8 +14674,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2017878050}
   - component: {fileID: 2017878051}
+  - component: {fileID: 2017878052}
   m_Layer: 0
-  m_Name: furniture pack grey outline_208
+  m_Name: Oven
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14549,6 +14755,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2017878052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017878049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: 598f7e292a6244d8f897d74116c254c8, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &2030251945
 GameObject:
   m_ObjectHideFlags: 0
@@ -14560,6 +14781,7 @@ GameObject:
   - component: {fileID: 2030251946}
   - component: {fileID: 2030251948}
   - component: {fileID: 2030251947}
+  - component: {fileID: 2030251949}
   m_Layer: 0
   m_Name: furniture pack grey outline_49 (1)
   m_TagString: Untagged
@@ -14686,6 +14908,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2030251949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030251945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: a23afbc2eeb4a4f788808b379e20fa52, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!224 &2055816126 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7014676955261295161, guid: d1d999223773e4f2da748eb6ce79b3f2, type: 3}
@@ -14702,6 +14939,7 @@ GameObject:
   - component: {fileID: 2083851649}
   - component: {fileID: 2083851650}
   - component: {fileID: 2083851651}
+  - component: {fileID: 2083851652}
   m_Layer: 0
   m_Name: furniture pack grey outline_66
   m_TagString: Untagged
@@ -14828,6 +15066,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &2083851652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083851648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: 98373340bf33044d19db8403c6301756, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &117007538285264428
 PrefabInstance:
   m_ObjectHideFlags: 0

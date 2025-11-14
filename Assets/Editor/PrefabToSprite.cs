@@ -162,10 +162,10 @@ public static class PrefabToSprite
         int texW = Mathf.Clamp(Mathf.CeilToInt(bounds.size.x * defaultPPU), 32, 4096);
         int texH = Mathf.Clamp(Mathf.CeilToInt(bounds.size.y * defaultPPU), 32, 4096);
 
-            // create render texture
-            RenderTexture renderTex = new RenderTexture(texW, texH, 24, RenderTextureFormat.ARGB32);
-            renderTex.Create();
-            cam.targetTexture = renderTex;
+        // create render texture
+        RenderTexture renderTex = new RenderTexture(texW, texH, 24, RenderTextureFormat.ARGB32);
+        renderTex.Create();
+        cam.targetTexture = renderTex;
 
         // render
         RenderTexture prev = RenderTexture.active;
@@ -176,9 +176,9 @@ public static class PrefabToSprite
         tex.ReadPixels(new Rect(0, 0, texW, texH), 0, 0);
         tex.Apply();
 
-            // encode PNG and write
-            byte[] png = tex.EncodeToPNG();
-            File.WriteAllBytes(assetPath, png);
+        // encode PNG and write
+        byte[] png = tex.EncodeToPNG();
+        File.WriteAllBytes(assetPath, png);
 
         // import and set as sprite
         AssetDatabase.ImportAsset(assetPath);
@@ -191,12 +191,12 @@ public static class PrefabToSprite
             imp.SaveAndReimport();
         }
 
-            // cleanup
-            RenderTexture.active = prev;
-            cam.targetTexture = null;
-            renderTex.Release();
-            Object.DestroyImmediate(renderTex);
-            Object.DestroyImmediate(tex);
+        // cleanup
+        RenderTexture.active = prev;
+        cam.targetTexture = null;
+        renderTex.Release();
+        Object.DestroyImmediate(renderTex);
+        Object.DestroyImmediate(tex);
 
         if (switched != null)
         {

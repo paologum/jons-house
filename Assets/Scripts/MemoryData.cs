@@ -22,10 +22,22 @@ public class MemoryData : ScriptableObject
         [Header("Video (optional)")]
         [Tooltip("Optional VideoClip to play on this page instead of a static image.")]
         public VideoClip video;
+        [Tooltip("Rotation to apply to the video when displayed in the UI. Use this if the source video has orientation metadata or was authored rotated.")]
+        public VideoRotation videoRotation = VideoRotation.Deg0;
         [Tooltip("If true, the video will loop while the page is visible.")]
-        public bool videoLoop = false;
+        // default to true so authored videos play continuously as a memory
+        public bool videoLoop = true;
         [Tooltip("If true, the video will autoplay when the page is shown.")]
+        // autoplay enabled by default for an immediate memory experience
         public bool videoAutoplay = true;
+    }
+
+    public enum VideoRotation : int
+    {
+        Deg0 = 0,
+        Deg90 = 90,
+        Deg180 = 180,
+        Deg270 = 270
     }
 
     [Header("Pages")]
