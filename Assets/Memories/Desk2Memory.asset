@@ -20,10 +20,19 @@ MonoBehaviour:
     video: {fileID: 32900000, guid: 4c04b8a3dd6474a9e9538f4a89e361df, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: You look so good in my hat<3333
     title: HI BABBYYYY
     video: {fileID: 32900000, guid: 208691a0ddb7f4b60b15a539f2a9b9cf, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: cutieee
+    title: HIHIHIHIHI
+    video: {fileID: 32900000, guid: d21807f894e264f189453cd7d25f70be, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

@@ -18,14 +18,42 @@ MonoBehaviour:
     caption: 
     title: Eating the FIRST HAMAAABAARGur
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: 
     title: Cooking with JON wehehe
     video: {fileID: 32900000, guid: 87535f3795487443d94a6e31904184c7, type: 3}
-    videoRotation: 270
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: 
+    title: FRIED POTATO
+    video: {fileID: 32900000, guid: dca60e3cc5a984293baac2e5d3632915, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: a0255aecd7af24003af242c4ba2b0301, type: 3}
+    caption: you wouldn't let me take a full body XD
+    title: Hehehehehehe remember this?
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 21300000, guid: 114bf2f83ab7841ad862a5b0222f533b, type: 3}
+    caption: 
+    title: this is the tteokbokk i think?
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: 
+    title: You're so cute baby
+    video: {fileID: 32900000, guid: 1d6646cd315c9460bb138c64b2e00898, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

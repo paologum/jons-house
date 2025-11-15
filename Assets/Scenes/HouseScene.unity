@@ -684,8 +684,9 @@ GameObject:
   m_Component:
   - component: {fileID: 182811287}
   - component: {fileID: 182811288}
+  - component: {fileID: 182811289}
   m_Layer: 0
-  m_Name: furniture pack grey outline_434
+  m_Name: Fridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -764,6 +765,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &182811289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182811286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: 0b9bff3b7fc3249ee95bd7f4b21aff67, type: 2}
+  interactionRange: 1
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &190662841
 GameObject:
   m_ObjectHideFlags: 0
@@ -6131,7 +6147,7 @@ Transform:
   m_GameObject: {fileID: 750155454}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.11, y: -3.98, z: 0}
+  m_LocalPosition: {x: -1.99, y: 1.13, z: 0}
   m_LocalScale: {x: 1.2, y: 1.3500001, z: 1.5000001}
   m_ConstrainProportionsScale: 1
   m_Children: []

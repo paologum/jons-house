@@ -233,4 +233,11 @@ MonoBehaviour:
     videoLoop: 1
     videoAutoplay: 1
     videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: us making the castle!
+    title: ' :)'
+    video: {fileID: 32900000, guid: 0d6556033bcb64280b76f26a40e9ec71, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

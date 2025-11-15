@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
+  m_Name: FridgeMemory
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryData
+  title: 
+  pages:
+  - image: {fileID: 0}
+    caption: 
+    title: Cheesy Jon hahaha
+    video: {fileID: 32900000, guid: 2763b9cb7bbb54a48bbe5a96b828db1f, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
