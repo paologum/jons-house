@@ -22,15 +22,18 @@ public class MemoryData : ScriptableObject
         [Header("Video (optional)")]
         [Tooltip("Optional VideoClip to play on this page instead of a static image.")]
         public VideoClip video;
-    [Tooltip("If true, the video will loop while the page is visible.")]
-    // default to true so authored videos play continuously as a memory
-    public bool videoLoop = true;
-    [Tooltip("If true, the video will autoplay when the page is shown.")]
-    // autoplay enabled by default for an immediate memory experience
-    public bool videoAutoplay = true;
+        [Tooltip("If true, the video will loop while the page is visible.")]
+        // default to true so authored videos play continuously as a memory
+        public bool videoLoop = true;
+        [Tooltip("If true, the video will autoplay when the page is shown.")]
+        // autoplay enabled by default for an immediate memory experience
+        public bool videoAutoplay = true;
+        [Tooltip("Rotation in degrees to apply to the RawImage when this page's video is displayed (Z axis).")]
+        [Header("Video Rotation")]
+        public float videoRotateZ = 0f;
     }
 
-    // Video rotation removed: videos are rendered as-authored and should be oriented prior to import.
+    // Per-page video rotation: each page may specify a Z rotation (degrees) to apply to the RawImage
 
     [Header("Pages")]
     [Tooltip("Add one or more pages. Each page has an image and optional caption.")]

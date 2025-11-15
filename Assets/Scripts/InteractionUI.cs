@@ -501,6 +501,14 @@ public class InteractionUI : MonoBehaviour
                         rawRt.anchoredPosition = new Vector2(centerOffsetX, 0f);
                     }
 
+                    // Apply per-page Z rotation (degrees) to the RawImage so videos can be oriented in the UI.
+                    // This uses the MemoryPage.videoRotateZ field (default 0).
+                    try
+                    {
+                        raw.rectTransform.localEulerAngles = new Vector3(0f, 0f, p.videoRotateZ);
+                    }
+                    catch { }
+
                     if (vp == null)
                     {
                         var go = new GameObject(isLeftSide ? "_LeftVideoPlayer" : "_RightVideoPlayer");
@@ -576,7 +584,12 @@ public class InteractionUI : MonoBehaviour
                         try { leftVideoPlayer.Stop(); } catch { }
                         leftVideoPlayer.targetTexture = null;
                     }
-                    if (leftPageRawImage != null) leftPageRawImage.texture = null;
+                    if (leftPageRawImage != null)
+                    {
+                        leftPageRawImage.texture = null;
+                        // reset any rotation applied for previous video pages
+                        try { leftPageRawImage.rectTransform.localEulerAngles = Vector3.zero; } catch { }
+                    }
                 }
                 else
                 {
@@ -585,7 +598,12 @@ public class InteractionUI : MonoBehaviour
                         try { rightVideoPlayer.Stop(); } catch { }
                         rightVideoPlayer.targetTexture = null;
                     }
-                    if (rightPageRawImage != null) rightPageRawImage.texture = null;
+                    if (rightPageRawImage != null)
+                    {
+                        rightPageRawImage.texture = null;
+                        // reset any rotation applied for previous video pages
+                        try { rightPageRawImage.rectTransform.localEulerAngles = Vector3.zero; } catch { }
+                    }
                 }
 
                 if (raw != null) raw.gameObject.SetActive(false);

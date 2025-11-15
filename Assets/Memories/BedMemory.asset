@@ -20,34 +20,124 @@ MonoBehaviour:
     video: {fileID: 0}
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: I love how much fun you have with this it makes me so happy
     title: Flower Girl
     video: {fileID: 32900000, guid: a65e34819af7849f8bc2017caa7ea25c, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: 
     title: HEART HEHE
     video: {fileID: 32900000, guid: 2e39016a334d04d4a8514ac05f6b2c6b, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: My favorite view of you to see before work :D
     title: Bye byee
     video: {fileID: 32900000, guid: 120ced1204a7441c488b45b6afd1ec9f, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: My OTHER favorite view of you to see before work :D
     title: Bye byee
     video: {fileID: 32900000, guid: d99e008cc6adc4aa9be51ec3bcfca6aa, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 270
   - image: {fileID: 0}
     caption: 
     title: Awwwwwwww
     video: {fileID: 32900000, guid: 95fbfe0534a3143c5885104e973c96e8, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: 
+    title: STOP COVERING YOUR FACEEE
+    video: {fileID: 32900000, guid: 51aef46af9c0249c9bbae6cb0d8f99df, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: 
+    title: STOP COVERING YOUR FACEEE
+    video: {fileID: 32900000, guid: 4bcba4e3e9ada4ed98c2f12b81cd4a9b, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: hahahahahahah
+    title: sleepy baby :)
+    video: {fileID: 32900000, guid: b4c09e704bfb7480c8085b633a9be149, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: why you taking picture huh ):<
+    title: your sanrio clothes aw
+    video: {fileID: 32900000, guid: a224a8ebb9e93490fa26cfc1c71312b2, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: my baby always so eepy...
+    title: You are HALF awake haha
+    video: {fileID: 32900000, guid: 4cd5262dd25ed4d438eb4e00ceb0588d, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: 
+    title: ooop
+    video: {fileID: 32900000, guid: e5322bed7346647f897aac8258ef19f7, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: WAHHHH
+    title: FLoWER BABY
+    video: {fileID: 32900000, guid: fa9bad28f6b9645f892a82135afcc97f, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: 
+    title: i don't think my baby is conscious
+    video: {fileID: 32900000, guid: 1d885f3dbd2644089b3db0af7b93eec9, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 21300000, guid: 63ddaceb4274f4bed99e3d16b29ceee1, type: 3}
+    caption: i'm so happy you loved it :D
+    title: my fav journal ever
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: GRRRR
+    title: WHY YOU COVER YOUR PRETY FACE
+    video: {fileID: 32900000, guid: 0c1684a6a65e64dd7803ca5ea125c15e, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 21300000, guid: 2e65a90106bf441afa8d071698fdb7ad, type: 3}
+    caption: like really really like this pic
+    title: i really like this pic
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: 
+    title: bye byeeee
+    video: {fileID: 32900000, guid: 6217598eaad6d474199785d6fea864be, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

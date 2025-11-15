@@ -20,40 +20,47 @@ MonoBehaviour:
     video: {fileID: 0}
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 1f59e82e578604d4b82034049d2e2529, type: 3}
     caption: Why you look scared...
     title: Me and my baby <3333333
     video: {fileID: 0}
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 4f5290f9d4b88466f9cadbe4426ed44a, type: 3}
     caption: MY FAVORITE
     title: SPACE BUNS
     video: {fileID: 0}
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: Your contacts look so good here
     title: "Pretty bab\xA5"
     video: {fileID: 32900000, guid: 42fa779917172485e997771d51c05c23, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 270
   - image: {fileID: 21300000, guid: d6902b6324d0b402d86a5b283e1b8a7c, type: 3}
     caption: ......
     title: Uh....
     video: {fileID: 0}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: 
     title: Hi prettyyyyyy
     video: {fileID: 32900000, guid: 9fdff7894dd8b4c7e9ab43470437b2dc, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 270
   - image: {fileID: 0}
-    caption: 
-    title: Hi prettyyyyyy
-    video: {fileID: 32900000, guid: 9fdff7894dd8b4c7e9ab43470437b2dc, type: 3}
+    caption: i love love love love youuu.
+    title: so cute i can't
+    video: {fileID: 32900000, guid: 7a4ada2167f5d417bac47fe632ff4daf, type: 3}
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
