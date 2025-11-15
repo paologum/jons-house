@@ -125,9 +125,7 @@ public class InteractionUI : MonoBehaviour
     private RenderTexture leftVideoRT;
     private VideoPlayer rightVideoPlayer;
     private RenderTexture rightVideoRT;
-    // Last applied rotation angles per side (for debug overlay)
-    private int leftVideoRotation = 0;
-    private int rightVideoRotation = 0;
+    // (rotation removed — videos rendered upright as authored)
 
     void Start()
     {
@@ -158,13 +156,7 @@ public class InteractionUI : MonoBehaviour
         allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
     }
 
-    private Vector3 GetWorldCenter(RectTransform rt)
-    {
-        if (rt == null) return Vector3.zero;
-        var corners = new Vector3[4];
-        rt.GetWorldCorners(corners);
-        return (corners[0] + corners[1] + corners[2] + corners[3]) * 0.25f;
-    }
+    // (removed GetWorldCenter — rotation handling removed)
 
     private void EnsureVideoDebugOverlay()
     {
@@ -219,13 +211,13 @@ public class InteractionUI : MonoBehaviour
         string leftStatus = "none";
         if (leftVideoPlayer != null)
         {
-            leftStatus = $"clip={leftVideoPlayer.clip?.name ?? "-"} prepared={leftVideoPlayer.isPrepared} playing={leftVideoPlayer.isPlaying} rt={leftVideoRT?.width}x{leftVideoRT?.height} rot={leftVideoRotation}°";
+            leftStatus = $"clip={leftVideoPlayer.clip?.name ?? "-"} prepared={leftVideoPlayer.isPrepared} playing={leftVideoPlayer.isPlaying} rt={leftVideoRT?.width}x{leftVideoRT?.height}";
         }
 
         string rightStatus = "none";
         if (rightVideoPlayer != null)
         {
-            rightStatus = $"clip={rightVideoPlayer.clip?.name ?? "-"} prepared={rightVideoPlayer.isPrepared} playing={rightVideoPlayer.isPlaying} rt={rightVideoRT?.width}x{rightVideoRT?.height} rot={rightVideoRotation}°";
+            rightStatus = $"clip={rightVideoPlayer.clip?.name ?? "-"} prepared={rightVideoPlayer.isPrepared} playing={rightVideoPlayer.isPlaying} rt={rightVideoRT?.width}x{rightVideoRT?.height}";
         }
 
         _videoDebugOverlay.text = "Video Debug:\n" +
@@ -447,21 +439,10 @@ public class InteractionUI : MonoBehaviour
                     int nativeW = (p.video != null && p.video.width > 0) ? (int)p.video.width : Mathf.Max(16, Mathf.CeilToInt(parentSize.x));
                     int nativeH = (p.video != null && p.video.height > 0) ? (int)p.video.height : Mathf.Max(16, Mathf.CeilToInt(parentSize.y));
 
-                    // read rotation hint from the page (designer-controlled). If rotation is 90/270,
-                    // we'll treat the displayed dimensions as swapped (width<->height) and rotate the RawImage rect.
-                    int rotationAngle = 0;
-                    try { rotationAngle = (int)p.videoRotation; } catch { rotationAngle = 0; }
-                    bool swapDims = (rotationAngle == 90 || rotationAngle == 270);
-
-                    // Compute a base final size using the video's native orientation (no swap)
-                    // This makes rotation affect only orientation, not the computed fit size.
+                    // Compute scale to fit preserving aspect based on native video dimensions
                     float scale = Mathf.Min(availW / (float)nativeW, availH / (float)nativeH);
                     scale = Mathf.Max(0.01f, scale);
-                    Vector2 baseFinal = new Vector2(nativeW * scale, nativeH * scale);
-
-                    // If the video is rotated 90/270, swap the assigned size so the rotated
-                    // visual occupies the same area (just rotated) instead of shrinking.
-                    Vector2 finalSize = swapDims ? new Vector2(baseFinal.y, baseFinal.x) : baseFinal;
+                    Vector2 finalSize = new Vector2(nativeW * scale, nativeH * scale);
 
                     // Apply max size limits (explicit pixel limit takes precedence)
                     float maxW = (maxSizePixels.x > 0f) ? maxSizePixels.x : parentSize.x * Mathf.Clamp01(maxWidthPercent);
@@ -469,9 +450,15 @@ public class InteractionUI : MonoBehaviour
                     finalSize.x = Mathf.Min(finalSize.x, maxW);
                     finalSize.y = Mathf.Min(finalSize.y, maxH);
 
-                    // Create the RenderTexture sized to the video's unrotated pixel dimensions (baseFinal)
-                    int texW = Mathf.Max(16, Mathf.CeilToInt(baseFinal.x));
-                    int texH = Mathf.Max(16, Mathf.CeilToInt(baseFinal.y));
+                    // Create the RenderTexture sized to the video's scaled pixel dimensions.
+                    // Prefer the RawImage rect pixel size (accounting for Canvas.scaleFactor) so
+                    // the RT matches the actual UI pixel bounds and cannot exceed the visible RawImage.
+                    Canvas rootCanvasForRt = raw.GetComponentInParent<Canvas>();
+                    float canvasScale = rootCanvasForRt ? rootCanvasForRt.scaleFactor : 1f;
+                    Vector2 rawRectPixels = raw.rectTransform.rect.size * canvasScale;
+
+                    int texW = Mathf.Max(16, Mathf.CeilToInt(Mathf.Min(finalSize.x, rawRectPixels.x)));
+                    int texH = Mathf.Max(16, Mathf.CeilToInt(Mathf.Min(finalSize.y, rawRectPixels.y)));
 
                     if (rtTex == null || rtTex.width != texW || rtTex.height != texH)
                     {
@@ -492,14 +479,10 @@ public class InteractionUI : MonoBehaviour
                     // Update RawImage rect to preserve aspect ratio and fit inside the page area
                     var rawRt = raw.rectTransform;
                     float centerOffsetX = (pageMarginRight - pageMarginLeft) * 0.5f;
-                    // Preserve visual center while changing pivot/size when rotating so the image
-                    // doesn't suddenly shift. We'll compute world center before/after sizing and
-                    // adjust the RectTransform position to cancel the displacement.
-                    Vector3 oldCenter = Vector3.zero;
-                    if (rotationAngle != 0)
-                    {
-                        oldCenter = GetWorldCenter(rawRt);
-                    }
+
+                    // Center the RawImage and set its size so it won't stretch beyond the page.
+                    rawRt.anchorMin = rawRt.anchorMax = new Vector2(0.5f, 0.5f);
+                    rawRt.pivot = new Vector2(0.5f, 0.5f);
 
                     if (preserveAuthoringRect)
                     {
@@ -509,33 +492,13 @@ public class InteractionUI : MonoBehaviour
                         }
                         var baseAnch = originalAnchoredPositions[rawRt];
                         rawRt.sizeDelta = finalSize;
+                        // keep authored offset but center vertically/horizontally inside the page half
                         rawRt.anchoredPosition = new Vector2(baseAnch.x + centerOffsetX, baseAnch.y);
                     }
                     else
                     {
-                        rawRt.anchorMin = rawRt.anchorMax = new Vector2(0.5f, 1f);
-                        // when rotating, use center pivot to avoid visual offset; otherwise keep top pivot
-                        rawRt.pivot = (rotationAngle != 0) ? new Vector2(0.5f, 0.5f) : new Vector2(0.5f, 1f);
                         rawRt.sizeDelta = finalSize;
-                        rawRt.anchoredPosition = new Vector2(centerOffsetX, -pageMarginTop);
-                    }
-
-                    // Apply rotation to the RawImage so the video appears upright.
-                    rawRt.localEulerAngles = new Vector3(0f, 0f, rotationAngle);
-                    if (isLeftSide) leftVideoRotation = rotationAngle; else rightVideoRotation = rotationAngle;
-
-                    if (rotationAngle != 0)
-                    {
-                        // compute new center and move RectTransform so visual center is preserved
-                        Vector3 newCenter = GetWorldCenter(rawRt);
-                        Vector3 delta = newCenter - oldCenter;
-                        if (rawRt.parent != null)
-                        {
-                            // convert world delta to parent local space and adjust anchoredPosition
-                            Vector3 parentDelta = rawRt.parent.InverseTransformVector(delta);
-                            rawRt.anchoredPosition = rawRt.anchoredPosition - (Vector2)parentDelta;
-                        }
-                        Debug.Log($"InteractionUI: applied rotation {rotationAngle}° to {(isLeftSide ? "left" : "right")} RawImage for page {pageIndex}", this);
+                        rawRt.anchoredPosition = new Vector2(centerOffsetX, 0f);
                     }
 
                     if (vp == null)
