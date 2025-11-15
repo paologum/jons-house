@@ -62,5 +62,5 @@ MonoBehaviour:
     video: {fileID: 32900000, guid: 7a4ada2167f5d417bac47fe632ff4daf, type: 3}
     videoLoop: 1
     videoAutoplay: 1
-    videoRotateZ: 0
+    videoRotateZ: 270
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

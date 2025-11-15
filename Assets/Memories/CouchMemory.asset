@@ -18,84 +18,219 @@ MonoBehaviour:
     caption: You hate this pic but it's so cute hehe
     title: DEVIL JON RAH
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 1a12a4dcff0c14326af3dc0ad048f2e0, type: 3}
     caption: I think you liked this but you threw it away :((
     title: MANGO MANGO
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 99b569b16e3e4493ab1163c7c2065a55, type: 3}
     caption: THIS WAS LIKE THE FIRST WEEK I WAS BACK AW
     title: Pokemon Cards :)
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 2adef6b940c8648199b156ee786385a8, type: 3}
     caption: you really like how i look but i hate alkdsjfalksjfa;l
     title: AWWW
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: ee7c74941c0fe4486bbd97195f6c49b0, type: 3}
     caption: We barely drank this soju....
     title: Soju Heart <3
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 0
     videoAutoplay: 0
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: 
     title: How are you so hot
     video: {fileID: 32900000, guid: 346e06198a1704c389a35c655dea6b63, type: 3}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 861aab45331184485b632e35ceed4fb1, type: 3}
     caption: 
     title: Whoa....
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 21300000, guid: 85f883517fe874a1f9beadbcceb3efeb, type: 3}
     caption: 
     title: I LOVE THIS PIC OF YOU SM
     video: {fileID: 0}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: You look so good with red baby :)
     title: More flowers heheheh
     video: {fileID: 32900000, guid: 0b54b35f064694872a7253145ac78aee, type: 3}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: I loooove you baby
     title: Face Mask
     video: {fileID: 32900000, guid: 1a9cc1dfaa9be4b0790e8cb973369c7a, type: 3}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: We crode so much :( Some interesting frames there too haha
     title: Last day with lego...
     video: {fileID: 32900000, guid: 0f011b9638c594b1b8f4cddbac084f27, type: 3}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
   - image: {fileID: 0}
     caption: Sorry you just look so good so I included it again
     title: Sexy
     video: {fileID: 32900000, guid: 6ef6d7211dbda43558467b926d26cb0c, type: 3}
-    videoRotation: 0
     videoLoop: 1
     videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: ICAN'TICAN'TICAN'T I NEED MORE OF THIS
+    title: OMY GODDD YOU ARE SO CUTE
+    video: {fileID: 32900000, guid: 530a267aeec3a4313b69ca71512ef19e, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: 
+    title: HI BABYYY
+    video: {fileID: 32900000, guid: 11af92ef025be4d6f9b614fb128e0db1, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: hehe
+    title: your makeup looked so good today
+    video: {fileID: 32900000, guid: cb307d255a4084db5ba0e1d2d473cac5, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: JANG JANG
+    title: strawberry milk!
+    video: {fileID: 32900000, guid: f1ff87e87de7547eb8531e8575f2dd58, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: ramen radish and kimchi!
+    title: JANG
+    video: {fileID: 32900000, guid: 0412c89c1e2e14388b7eaa05716265a2, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: a23d8ace4b5d547b7be4fa4326a96651, type: 3}
+    caption: They are so so so pretty:) I'm happy you liked my gifts too !
+    title: I love your flowers sm
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: 53f1f5c64b6ac419eba987da4ff1209b, type: 3}
+    caption: no comment
+    title: WAHH
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: hi pretty are you single? can i have your number maybe?
+    title: kuromi!
+    video: {fileID: 32900000, guid: cb29924972a6640ec94ec8e906be443c, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 21300000, guid: 1d3eb4ab8d8304a8da67d826bdf1ea46, type: 3}
+    caption: I LOVED THIS CAN I HAVE IT AGAIN PLZ PLZ PLZ IT WAS SO GOOD (not to
+      my stomach doe)
+    title: CORN CHEESE BULGOGI
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: i want samgyupsal now :( I love your food so much can i have it every
+      day
+    title: samgyupsal
+    video: {fileID: 32900000, guid: 34852683f15f846eeae61c50b8826ea9, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: fcb2ad706abbe43c2ac9c770f3e01170, type: 3}
+    caption: we made too much....
+    title: GARLIC BREAD
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: 12b4630ea57674f3e83b7dfbdf78845f, type: 3}
+    caption: this is too spicy but i love eating this w u :)
+    title: tteokbokki
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: f81535bf099b04203a0c6c526860be6e, type: 3}
+    caption: hehehehehehehehe he's not built...
+    title: FLINS FLINS
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: i think you slept so long this day haha
+    title: Sleepy babyyy
+    video: {fileID: 32900000, guid: 38ea2f2d9fbd6459db471f16346433dd, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: :(((
+    title: NAURRRR
+    video: {fileID: 32900000, guid: 771dffaa269764245b69e72002a22d68, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: fettucini?
+    title: PASTA PASTA PASTA
+    video: {fileID: 32900000, guid: 0a9c2e5f9d13341c9981fb3d17bd7ae3, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 0}
+    caption: 
+    title: yummy yummy yummy
+    video: {fileID: 32900000, guid: c68109db5846e44e699cd55c02be1a40, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: d303dda7fa571492c838d521bd0202df, type: 3}
+    caption: my baby's gift to me before i left :) I love you!
+    title: i miss youuu
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: a1f3023f4c7d14bd6b2bddde53d9443a, type: 3}
+    caption: dis so pretty! we need to make the other one too baby
+    title: LEGO
+    video: {fileID: 0}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 0
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
