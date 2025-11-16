@@ -63,4 +63,11 @@ MonoBehaviour:
     videoLoop: 1
     videoAutoplay: 1
     videoRotateZ: 270
+  - image: {fileID: 0}
+    caption: :))))
+    title: SPACE BUNS AGAIN BUT UP CLOSE
+    video: {fileID: 32900000, guid: 75391114358014a89a0e1022fd0569ea, type: 3}
+    videoLoop: 1
+    videoAutoplay: 1
+    videoRotateZ: 270
   glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

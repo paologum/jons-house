@@ -104,13 +104,15 @@ public class InteractableObject : MonoBehaviour
         {
             if (playerInRange)
             {
+                Debug.Log($"InteractableObject: Show hint for '{GetObjectName()}' (dist={distance:F2})", this);
                 if (HintManager.Instance != null)
                     HintManager.Instance.ShowInteractHint(GetObjectName());
             }
             else
             {
+                Debug.Log($"InteractableObject: Hide hint for '{GetObjectName()}'", this);
                 if (HintManager.Instance != null)
-                    HintManager.Instance.HideHint();
+                    HintManager.Instance.HideHintFor(GetObjectName());
             }
             lastPlayerInRange = playerInRange;
         }

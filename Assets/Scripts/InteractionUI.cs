@@ -188,6 +188,7 @@ public class InteractionUI : MonoBehaviour
 
     private void OnCancelPerformed()
     {
+        Debug.Log($"InteractionUI: OnCancelPerformed invoked; panelActive={memoryPanel != null && memoryPanel.activeSelf}", this);
         if (memoryPanel != null && memoryPanel.activeSelf) HideMemory();
     }
 
@@ -315,6 +316,17 @@ public class InteractionUI : MonoBehaviour
             memoryPanel.SetActive(false);
         }
 
+        // Restore gameplay action map so gameplay controls resume
+        if (InputManager.Instance != null)
+        {
+            // Unsubscribe CancelPerformed to avoid duplicate handlers
+            InputManager.Instance.CancelPerformed -= OnCancelPerformed;
+            // Also unsubscribe Next/Prev to match subscriptions made when showing the UI
+            InputManager.Instance.NextPerformed -= OnNextPerformed;
+            InputManager.Instance.PrevPerformed -= OnPrevPerformed;
+            InputManager.Instance.EnableGameplay();
+        }
+
         // Resume game time
         if (Application.isPlaying)
             Time.timeScale = 1f;
@@ -373,6 +385,20 @@ public class InteractionUI : MonoBehaviour
         if (memoryPanel == null) return;
 
         memoryPanel.SetActive(true);
+
+        // Enable UI action map so UI navigation and Cancel are routed to UI bindings
+        if (InputManager.Instance != null)
+        {
+            // Ensure we are subscribed to CancelPerformed (idempotent)
+            InputManager.Instance.CancelPerformed -= OnCancelPerformed;
+            InputManager.Instance.CancelPerformed += OnCancelPerformed;
+            // Ensure Next/Prev are subscribed as well so keyboard arrows/controller triggers work
+            InputManager.Instance.NextPerformed -= OnNextPerformed;
+            InputManager.Instance.PrevPerformed -= OnPrevPerformed;
+            InputManager.Instance.NextPerformed += OnNextPerformed;
+            InputManager.Instance.PrevPerformed += OnPrevPerformed;
+            InputManager.Instance.EnableUI();
+        }
 
         if (titleText != null)
         {
@@ -572,7 +598,6 @@ public class InteractionUI : MonoBehaviour
 
                     try
                     {
-                    src:;
                         vp.prepareCompleted += handler;
                         vp.Prepare();
                         Debug.Log($"InteractionUI: preparing video for page (width={rtTex.width},height={rtTex.height}) clip={p.video}", this);

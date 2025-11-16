@@ -14325,6 +14325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1842347004}
   - component: {fileID: 1842347005}
+  - component: {fileID: 1842347006}
   m_Layer: 0
   m_Name: furniture pack grey outline_198
   m_TagString: Untagged
@@ -14405,6 +14406,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1842347006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842347003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96319972cf21648e58dafd27c22e17be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableObject
+  memoryDataAsset: {fileID: 11400000, guid: d136daec397cb4ae090dfcebc3586fb6, type: 2}
+  interactionRange: 2
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &1859411850
 GameObject:
   m_ObjectHideFlags: 0

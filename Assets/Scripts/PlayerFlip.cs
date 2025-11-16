@@ -23,8 +23,21 @@ public class PlayerFlip : MonoBehaviour
 
     void Update()
     {
-        // read horizontal input (replace with your movement input if different)
-        float moveX = Input.GetAxisRaw("Horizontal");
+        // Prefer movement from InputManager. If missing, fall back to legacy Input with a one-time warning
+        float moveX = 0f;
+        if (InputManager.Instance != null)
+        {
+            moveX = InputManager.Instance.ReadMove().x;
+        }
+        else
+        {
+            if (!_warnedMissingInputManagerFlip)
+            {
+                _warnedMissingInputManagerFlip = true;
+                Debug.LogWarning("PlayerFlip: InputManager not found. Direct use of legacy Input is deprecated — please migrate to InputManager.ReadMove() or remove PlayerFlip if flip is handled elsewhere.", this);
+            }
+            moveX = Input.GetAxisRaw("Horizontal");
+        }
 
         if (sr != null)
         {
@@ -79,4 +92,5 @@ public class PlayerFlip : MonoBehaviour
     private bool _hasCheckedSpeedParam = false;
     private bool _hasSpeedParam = false;
     private bool _warnedMissingSpeedParam = false;
+    private bool _warnedMissingInputManagerFlip = false;
 }

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
+  m_Name: DoorMemory
+  m_EditorClassIdentifier: Assembly-CSharp::MemoryData
+  title: Door Memory
+  pages:
+  - image: {fileID: 21300000, guid: c4f9d5ef9fe5b46bcb0c0f0fe51420a6, type: 3}
+    caption: My baby is LOADED
+    title: Post Dave and Busters :)
+    video: {fileID: 0}
+    videoLoop: 0
+    videoAutoplay: 0
+    videoRotateZ: 0
+  - image: {fileID: 21300000, guid: 2752ae066e79d4dc9a6f495164b21654, type: 3}
+    caption: heheheh
+    title: My baby with her starbucks :D
+    video: {fileID: 0}
+    videoLoop: 0
+    videoAutoplay: 0
+    videoRotateZ: 0
+  glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

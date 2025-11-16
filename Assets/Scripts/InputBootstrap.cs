@@ -55,9 +55,26 @@ public class InputBootstrap : MonoBehaviour
         // Activate the component to allow input events
         PlayerInput.enabled = true;
 
+        // If an InputManager exists, hand over the runtime action asset so it can wire callbacks.
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.SetActionAsset(PlayerInput.actions);
+        }
+
         if (dontDestroyOnLoad)
             DontDestroyOnLoad(gameObject);
     }
+#if ENABLE_INPUT_SYSTEM
+    void Start()
+    {
+        // Try again after a frame in case InputManager wasn't created yet during Awake.
+        if (playerControlsAsset != null && PlayerInput != null && InputManager.Instance != null)
+        {
+            InputManager.Instance.SetActionAsset(PlayerInput.actions);
+            Debug.Log("InputBootstrap: handed PlayerInput.actions to InputManager in Start.", this);
+        }
+    }
+#endif
 #else
     void Awake()
     {

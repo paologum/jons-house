@@ -13,10 +13,11 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private bool facingRight = true;
+    // facingRight removed: sprite flipping is applied directly to SpriteRenderer.flipX
     private bool hasMoveXParam = false;
     private bool hasMoveYParam = false;
     private bool hasIsWalkingParam = false;
+    private bool _warnedMissingInputManager = false;
 
     void Start()
     {
@@ -47,8 +48,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Read movement from InputManager when available (supports new Input System),
-        // otherwise fall back to legacy Input axes.
+        // Read movement exclusively from InputManager. Legacy direct Input reads are deprecated;
+        // log a one-time warning if the InputManager is missing so maintainers can migrate.
         Vector2 inputMove = Vector2.zero;
         if (InputManager.Instance != null)
         {
@@ -56,8 +57,13 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            inputMove.x = Input.GetAxisRaw("Horizontal");
-            inputMove.y = Input.GetAxisRaw("Vertical");
+            if (!_warnedMissingInputManager)
+            {
+                _warnedMissingInputManager = true;
+                Debug.LogWarning("PlayerController: InputManager not found in scene. Legacy direct Input reads are deprecated — add an InputManager to the scene or assign PlayerInput via InputBootstrap.");
+            }
+            // graceful fallback to zero movement to avoid unexpected motion
+            inputMove = Vector2.zero;
         }
 
         // Normalize diagonal movement
@@ -77,12 +83,10 @@ public class PlayerController : MonoBehaviour
         // Update facing based on horizontal input. Only change facing when there's horizontal movement
         if (movement.x < -0.01f)
         {
-            facingRight = false;
             if (spriteRenderer != null) spriteRenderer.flipX = true;
         }
         else if (movement.x > 0.01f)
         {
-            facingRight = true;
             if (spriteRenderer != null) spriteRenderer.flipX = false;
         }
     }

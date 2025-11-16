@@ -29,6 +29,9 @@ public class JukeboxUI : MonoBehaviour
     public float hoverScale = 1.08f;
 
     private Jukebox jukebox;
+    // Expose current jukebox target so other systems can check whether the UI is
+    // currently showing a particular jukebox instance.
+    public Jukebox CurrentJukebox => jukebox;
     private List<Button> banners = new List<Button>();
 
     void Start()
@@ -47,6 +50,8 @@ public class JukeboxUI : MonoBehaviour
         jukebox = target;
         BuildList();
         if (panel != null) panel.SetActive(true);
+        // Enable UI action map so UI navigation and Cancel are routed to UI bindings
+        if (InputManager.Instance != null) InputManager.Instance.EnableUI();
         // pause game while UI is open
         if (Application.isPlaying) Time.timeScale = 0f;
         // select first banner for gamepad navigation
@@ -59,6 +64,8 @@ public class JukeboxUI : MonoBehaviour
     public void Hide()
     {
         if (panel != null) panel.SetActive(false);
+        // Restore gameplay action map so gameplay controls resume
+        if (InputManager.Instance != null) InputManager.Instance.EnableGameplay();
         if (Application.isPlaying) Time.timeScale = 1f;
         // clear created banners
         foreach (var b in banners)
@@ -163,6 +170,7 @@ public class JukeboxUI : MonoBehaviour
 
     private void OnCancelPerformed()
     {
+        Debug.Log($"JukeboxUI: OnCancelPerformed invoked; panelActive={panel != null && panel.activeSelf}", this);
         if (panel != null && panel.activeSelf) Hide();
     }
 }

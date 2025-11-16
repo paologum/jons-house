@@ -34,8 +34,16 @@ public class JukeboxInteractable : MonoBehaviour
         // Use the central HintManager only; do nothing if a HintManager is not present.
         if (HintManager.Instance != null)
         {
-            if (inRange) HintManager.Instance.ShowInteractHint(GetObjectName());
-            else HintManager.Instance.HideHint();
+            if (inRange)
+            {
+                Debug.Log($"JukeboxInteractable: Show hint for '{GetObjectName()}' (dist={dist:F2})", this);
+                HintManager.Instance.ShowInteractHint(GetObjectName());
+            }
+            else
+            {
+                Debug.Log($"JukeboxInteractable: Hide hint for '{GetObjectName()}'", this);
+                HintManager.Instance.HideHintFor(GetObjectName());
+            }
         }
 
         // Interaction is routed via InputManager.InteractPerformed. See OnInteractPerformed.

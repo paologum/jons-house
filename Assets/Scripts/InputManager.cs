@@ -7,11 +7,10 @@ using UnityEngine.InputSystem;
 #endif
 
 /// <summary>
-/// Central input façade. Uses the new Input System at runtime when available
-/// (looks up actions from a PlayerInput / InputActionAsset). Falls back to
-/// InputHelper polling when the Input System or actions asset is not present.
-///
-/// Exposes events for discrete actions and a ReadMove() helper for polling movement.
+/// InputManager: a small façade that only uses the new Input System.
+/// It looks up the PlayerInput in the scene (or an inspector-assigned
+/// InputActionAsset) and wires the Gameplay action map only. No legacy
+/// Input API is used.
 /// </summary>
 public class InputManager : MonoBehaviour
 {
@@ -20,6 +19,7 @@ public class InputManager : MonoBehaviour
     [Tooltip("If true, keep the InputManager across scene loads.")]
     public bool dontDestroyOnLoad = true;
 
+    // Discrete action events (raised when the corresponding action is performed)
     public event Action InteractPerformed;
     public event Action CancelPerformed;
     public event Action NextPerformed;
@@ -28,33 +28,32 @@ public class InputManager : MonoBehaviour
 
     private readonly List<InteractableObject> interactables = new List<InteractableObject>();
 
-    // Runtime references to actions (looked up from PlayerInput.actions)
+    // Tracks whether we've wired the current actionsAsset
+    private bool isWired = false;
+
 #if ENABLE_INPUT_SYSTEM
+    [Header("Inspector (optional)")]
+    [Tooltip("Optional: assign an InputActionAsset here. If empty, InputManager will find the PlayerInput in the scene and use its actions.")]
+    [SerializeField]
+    private InputActionAsset inspectorActionsAsset;
+
     private InputActionAsset actionsAsset;
     private InputActionMap gameplayMap;
-    private InputActionMap uiMap;
 
     private InputAction moveAction;
     private InputAction interactAction;
-    private InputAction cancelAction;
     private InputAction nextAction;
     private InputAction prevAction;
     private InputAction randomizeAction;
+    private InputAction uiCancelAction;
 
-    // cached callbacks for clean unsubscription
+    // cached delegates so we can unsubscribe cleanly
     private Action<InputAction.CallbackContext> cbInteract;
-    private Action<InputAction.CallbackContext> cbCancel;
     private Action<InputAction.CallbackContext> cbNext;
     private Action<InputAction.CallbackContext> cbPrev;
     private Action<InputAction.CallbackContext> cbRandomize;
+    private Action<InputAction.CallbackContext> cbCancel;
 #endif
-
-    // Polling state for legacy fallback (always declared so compile doesn't depend on define)
-    private bool lastInteract = false;
-    private bool lastCancel = false;
-    private bool lastNext = false;
-    private bool lastPrev = false;
-    private bool lastRandom = false;
 
     void Awake()
     {
@@ -65,53 +64,37 @@ public class InputManager : MonoBehaviour
         }
         Instance = this;
         if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
-
-#if ENABLE_INPUT_SYSTEM
-        // Try to find a PlayerInput in the scene to get the action asset.
-        // Use newer API to avoid obsolete warning when available
-        var playerInput = FindFirstObjectByType<PlayerInput>();
-        if (playerInput != null)
-        {
-            actionsAsset = playerInput.actions;
-        }
-#endif
     }
 
     void OnEnable()
     {
 #if ENABLE_INPUT_SYSTEM
-        // Re-resolve the PlayerInput/actions asset in case it was added after Awake
+        // Prefer inspector asset if present, otherwise look for PlayerInput in scene
+        actionsAsset = inspectorActionsAsset;
         if (actionsAsset == null)
         {
             var pi = FindFirstObjectByType<PlayerInput>();
             if (pi != null) actionsAsset = pi.actions;
         }
 
-        if (actionsAsset != null)
+        if (actionsAsset == null)
         {
-            gameplayMap = actionsAsset.FindActionMap("Gameplay", true);
-            uiMap = actionsAsset.FindActionMap("UI", false);
+            Debug.LogWarning("InputManager: no InputActionAsset found. Attach a PlayerInput or assign an asset to the inspector.", this);
+            return;
+        }
 
-            moveAction = gameplayMap?.FindAction("Move", true);
-            interactAction = gameplayMap?.FindAction("Interact", false);
-            nextAction = gameplayMap?.FindAction("Next", false) ?? uiMap?.FindAction("Next", false);
-            prevAction = gameplayMap?.FindAction("Prev", false) ?? uiMap?.FindAction("Prev", false);
-            randomizeAction = gameplayMap?.FindAction("Randomize", false);
-            cancelAction = uiMap?.FindAction("Cancel", false);
+        // Only use the Gameplay map
+        gameplayMap = actionsAsset.FindActionMap("Gameplay", true);
+        if (gameplayMap == null)
+        {
+            Debug.LogError("InputManager: 'Gameplay' action map not found in the assigned action asset.", this);
+            return;
+        }
 
-            cbInteract = ctx => HandleInteract();
-            cbCancel = ctx => HandleCancel();
-            cbNext = ctx => HandleNext();
-            cbPrev = ctx => HandlePrev();
-            cbRandomize = ctx => HandleRandomize();
-
-            if (interactAction != null) interactAction.performed += cbInteract;
-            if (cancelAction != null) cancelAction.performed += cbCancel;
-            if (nextAction != null) nextAction.performed += cbNext;
-            if (prevAction != null) prevAction.performed += cbPrev;
-            if (randomizeAction != null) randomizeAction.performed += cbRandomize;
-
-            actionsAsset.Enable();
+        // If an asset was assigned in the inspector or found on PlayerInput, set it up now.
+        if (actionsAsset != null && !isWired)
+        {
+            SetActionAsset(actionsAsset);
         }
 #endif
     }
@@ -119,80 +102,141 @@ public class InputManager : MonoBehaviour
     void OnDisable()
     {
 #if ENABLE_INPUT_SYSTEM
-        if (actionsAsset != null)
+        if (interactAction != null && cbInteract != null) interactAction.performed -= cbInteract;
+        if (nextAction != null && cbNext != null) nextAction.performed -= cbNext;
+        if (prevAction != null && cbPrev != null) prevAction.performed -= cbPrev;
+        if (randomizeAction != null && cbRandomize != null) randomizeAction.performed -= cbRandomize;
+
+        UnwireActions();
+#endif
+    }
+
+#if ENABLE_INPUT_SYSTEM
+    /// <summary>
+    /// Set or replace the action asset at runtime. This is called by InputBootstrap
+    /// when PlayerInput is initialized. Safe to call multiple times.
+    /// </summary>
+    public void SetActionAsset(InputActionAsset asset)
+    {
+        if (asset == null) return;
+        // Unwire any previously wired actions
+        UnwireActions();
+
+        actionsAsset = asset;
+
+        // Find Gameplay map and primary actions
+        gameplayMap = actionsAsset.FindActionMap("Gameplay", true);
+        if (gameplayMap == null)
+        {
+            Debug.LogError("InputManager.SetActionAsset: 'Gameplay' action map not found in provided asset.", this);
+            return;
+        }
+
+        moveAction = gameplayMap.FindAction("Move", true);
+        interactAction = gameplayMap.FindAction("Interact", false);
+        nextAction = gameplayMap.FindAction("Next", false);
+        prevAction = gameplayMap.FindAction("Prev", false);
+        randomizeAction = gameplayMap.FindAction("Randomize", false);
+
+    cbInteract = ctx => { InteractPerformed?.Invoke(); TriggerInteract(); };
+        cbNext = ctx => NextPerformed?.Invoke();
+        cbPrev = ctx => PrevPerformed?.Invoke();
+        cbRandomize = ctx => RandomizeToggled?.Invoke();
+    cbCancel = ctx => { Debug.Log("InputManager: UI Cancel performed", this); CancelPerformed?.Invoke(); };
+
+        if (interactAction != null) interactAction.performed += cbInteract;
+        if (nextAction != null) nextAction.performed += cbNext;
+        if (prevAction != null) prevAction.performed += cbPrev;
+        if (randomizeAction != null) randomizeAction.performed += cbRandomize;
+
+        // Note: Next/Prev/Randomize are wired only from the Gameplay map above.
+
+        // Wire UI Cancel if present
+        var uiMap = actionsAsset.FindActionMap("UI", false);
+        if (uiMap != null)
+        {
+            uiCancelAction = uiMap.FindAction("Cancel", false);
+            if (uiCancelAction != null) uiCancelAction.performed += cbCancel;
+        }
+
+        // Note: Cancel is wired only from the UI map above (no cross-map fallbacks).
+
+        // Enable gameplay map explicitly
+        try { gameplayMap.Enable(); } catch { }
+
+        // Diagnostic log to help verify wiring at runtime
+        Debug.Log($"InputManager: SetActionAsset wired. Gameplay present={gameplayMap!=null}, Move={moveAction!=null}, Interact={interactAction!=null}, UI present={uiMap!=null}, Cancel={uiCancelAction!=null}", this);
+
+        isWired = true;
+    }
+
+    private void UnwireActions()
+    {
+        try
         {
             if (interactAction != null && cbInteract != null) interactAction.performed -= cbInteract;
-            if (cancelAction != null && cbCancel != null) cancelAction.performed -= cbCancel;
             if (nextAction != null && cbNext != null) nextAction.performed -= cbNext;
             if (prevAction != null && cbPrev != null) prevAction.performed -= cbPrev;
             if (randomizeAction != null && cbRandomize != null) randomizeAction.performed -= cbRandomize;
-
-            actionsAsset.Disable();
+            if (uiCancelAction != null && cbCancel != null) uiCancelAction.performed -= cbCancel;
         }
-#else
-        lastInteract = lastCancel = lastNext = lastPrev = lastRandom = false;
-#endif
+        catch { }
+
+        try { gameplayMap?.Disable(); } catch { }
+
+        // clear references
+        moveAction = interactAction = nextAction = prevAction = randomizeAction = uiCancelAction = null;
+        gameplayMap = null;
+        actionsAsset = null;
+        isWired = false;
     }
-
-    void Update()
-    {
-        // If the actions asset is present and enabled the performed callbacks will handle discrete
-        // actions. Otherwise fall back to legacy polling using the old Input API.
-#if ENABLE_INPUT_SYSTEM
-        if (actionsAsset != null) return;
 #endif
 
-        // Legacy polling fallback (edge detection)
-        bool interact = LegacyIsInteractPressed();
-        if (interact && !lastInteract) HandleInteract();
-        lastInteract = interact;
-
-        bool cancel = LegacyIsCancelPressed();
-        if (cancel && !lastCancel) HandleCancel();
-        lastCancel = cancel;
-
-        bool next = LegacyIsNextPressed();
-        if (next && !lastNext) HandleNext();
-        lastNext = next;
-
-        bool prev = LegacyIsPrevPressed();
-        if (prev && !lastPrev) HandlePrev();
-        lastPrev = prev;
-
-        bool random = LegacyIsRandomizeTogglePressed();
-        if (random && !lastRandom) HandleRandomize();
-        lastRandom = random;
-    }
-
+    /// <summary>
+    /// Read continuous movement from the Move action on the Gameplay map.
+    /// Returns Vector2.zero if Move action is not present.
+    /// </summary>
     public Vector2 ReadMove()
     {
 #if ENABLE_INPUT_SYSTEM
         if (moveAction != null) return moveAction.ReadValue<Vector2>();
-        // If moveAction not available fall back to legacy axes
 #endif
-        return new Vector2(GetAxisRawSafe("Horizontal"), GetAxisRawSafe("Vertical"));
+        return Vector2.zero;
     }
 
+    /// <summary>
+    /// Enable the UI action map so UI navigation and Cancel are active.
+    /// This will disable the Gameplay map to avoid conflicting inputs.
+    /// </summary>
     public void EnableUI()
     {
 #if ENABLE_INPUT_SYSTEM
-        gameplayMap?.Disable();
-        uiMap?.Enable();
+        try
+        {
+            var uiMap = actionsAsset?.FindActionMap("UI", false);
+            // Enable the UI map if present. Do not disable Gameplay here so gameplay-based bindings
+            // (e.g. Next/Prev on Gameplay) remain active while UI is open.
+            uiMap?.Enable();
+        }
+        catch { }
+        Debug.Log("InputManager: EnableUI called (UI map enabled)", this);
 #endif
     }
 
+    /// <summary>
+    /// Re-enable Gameplay action map and disable UI action map.
+    /// </summary>
     public void EnableGameplay()
     {
 #if ENABLE_INPUT_SYSTEM
-        uiMap?.Disable();
-        gameplayMap?.Enable();
-#endif
-    }
-
-    public void DisableAll()
-    {
-#if ENABLE_INPUT_SYSTEM
-        actionsAsset?.Disable();
+        try
+        {
+            var uiMap = actionsAsset?.FindActionMap("UI", false);
+            uiMap?.Disable();
+            gameplayMap?.Enable();
+        }
+        catch { }
+        Debug.Log("InputManager: EnableGameplay called (Gameplay map enabled)", this);
 #endif
     }
 
@@ -207,19 +251,6 @@ public class InputManager : MonoBehaviour
         if (obj == null) return;
         interactables.Remove(obj);
     }
-
-    private void HandleInteract()
-    {
-        InteractPerformed?.Invoke();
-        var target = FindNearestInteractableInRange();
-        if (target != null)
-            target.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
-    }
-
-    private void HandleCancel() => CancelPerformed?.Invoke();
-    private void HandleNext() => NextPerformed?.Invoke();
-    private void HandlePrev() => PrevPerformed?.Invoke();
-    private void HandleRandomize() => RandomizeToggled?.Invoke();
 
     private InteractableObject FindNearestInteractableInRange()
     {
@@ -243,48 +274,14 @@ public class InputManager : MonoBehaviour
         return best;
     }
 
-    // Legacy input helper implementations so this manager is self-contained and doesn't
-    // depend on the removed InputHelper class.
-    private bool LegacyIsInteractPressed()
+    // For compatibility with existing callers that expect InputManager to invoke interaction behavior
+    // we keep this helper that finds the target and sends the Interact message. External code should
+    // subscribe to InteractPerformed instead of calling this directly where possible.
+    public void TriggerInteract()
     {
-        if (Input.GetKeyDown(KeyCode.E)) return true;
-        try { if (Input.GetButtonDown("Submit")) return true; } catch { }
-        if (Input.GetKeyDown(KeyCode.JoystickButton0)) return true;
-        return false;
-    }
-
-    private bool LegacyIsCancelPressed()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) return true;
-        if (Input.GetKeyDown(KeyCode.JoystickButton1)) return true;
-        return false;
-    }
-
-    private bool LegacyIsNextPressed()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow)) return true;
-        if (Input.GetKeyDown(KeyCode.JoystickButton5)) return true;
-        float h = GetAxisRawSafe("Horizontal");
-        return h > 0.5f;
-    }
-
-    private bool LegacyIsPrevPressed()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) return true;
-        if (Input.GetKeyDown(KeyCode.JoystickButton4)) return true;
-        float h = GetAxisRawSafe("Horizontal");
-        return h < -0.5f;
-    }
-
-    private bool LegacyIsRandomizeTogglePressed()
-    {
-        if (Input.GetKeyDown(KeyCode.JoystickButton3)) return true;
-        return false;
-    }
-
-    private float GetAxisRawSafe(string axis)
-    {
-        try { return Input.GetAxisRaw(axis); } catch { return 0f; }
+        var target = FindNearestInteractableInRange();
+        if (target != null)
+            target.SendMessage("Interact", SendMessageOptions.DontRequireReceiver);
     }
 }
 

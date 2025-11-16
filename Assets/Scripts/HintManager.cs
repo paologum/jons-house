@@ -16,6 +16,8 @@ public class HintManager : MonoBehaviour
 
     // cached text component under hintObject
     private TextMeshProUGUI hintText;
+    // Track the current interact owner so hide requests from other objects don't stomp a newer hint
+    private string currentInteractOwner = null;
 
     void Awake()
     {
@@ -50,6 +52,8 @@ public class HintManager : MonoBehaviour
         if (hintObject == null) return;
         hintObject.SetActive(true);
         if (hintText != null) hintText.text = message;
+        // generic show does not set an owner
+        currentInteractOwner = null;
     }
 
     /// <summary>
@@ -59,6 +63,8 @@ public class HintManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(objectName)) ShowHint("Press E to interact");
         else ShowHint($"Press E to interact with {objectName}");
+        // record the owner so only the originating object can hide this hint
+        currentInteractOwner = objectName;
     }
 
     /// <summary>
@@ -68,5 +74,19 @@ public class HintManager : MonoBehaviour
     {
         if (hintObject == null) return;
         hintObject.SetActive(false);
+        currentInteractOwner = null;
+    }
+
+    /// <summary>
+    /// Hide the hint only if it was last shown for the provided object name.
+    /// This prevents one interactable's Hide call from hiding another interactable's hint.
+    /// </summary>
+    public void HideHintFor(string objectName)
+    {
+        if (string.IsNullOrEmpty(objectName)) { HideHint(); return; }
+        if (currentInteractOwner == objectName)
+        {
+            HideHint();
+        }
     }
 }
