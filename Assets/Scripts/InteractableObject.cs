@@ -15,6 +15,7 @@ public class InteractableObject : MonoBehaviour
     [SerializeField] private Color glowColor = Color.yellow;
 
     private bool playerInRange = false;
+    private bool lastPlayerInRange = false;
     private GameObject player;
     // Support multi-tile prefabs by caching all SpriteRenderers under this object
     private SpriteRenderer[] spriteRenderers;
@@ -96,14 +97,29 @@ public class InteractableObject : MonoBehaviour
             }
         }
 
-        // Handle interaction input
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        // If the in-range state changed, notify the HintManager (if present) so the shared
+        // hint can be shown/hidden. This is non-blocking and preserves the existing
+        // InteractionUI polling fallback.
+        if (playerInRange != lastPlayerInRange)
         {
-            Interact();
+            if (playerInRange)
+            {
+                if (HintManager.Instance != null)
+                    HintManager.Instance.ShowInteractHint(GetObjectName());
+            }
+            else
+            {
+                if (HintManager.Instance != null)
+                    HintManager.Instance.HideHint();
+            }
+            lastPlayerInRange = playerInRange;
         }
+
+        // Interaction routing is handled centrally by InputManager (it will Invoke InteractPerformed
+        // and call Interact on the nearest registered interactable). No local polling required.
     }
 
-    void Interact()
+    public void Interact()
     {
         if (interactionUI != null)
         {
@@ -116,6 +132,18 @@ public class InteractableObject : MonoBehaviour
                 Debug.LogWarning($"InteractableObject '{gameObject.name}' has no MemoryData assigned.", this);
             }
         }
+    }
+
+    void OnEnable()
+    {
+        if (InputManager.Instance != null)
+            InputManager.Instance.RegisterInteractable(this);
+    }
+
+    void OnDisable()
+    {
+        if (InputManager.Instance != null)
+            InputManager.Instance.UnregisterInteractable(this);
     }
 
     void OnDrawGizmosSelected()

@@ -47,12 +47,21 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Get input from WASD or Arrow keys
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        // Read movement from InputManager when available (supports new Input System),
+        // otherwise fall back to legacy Input axes.
+        Vector2 inputMove = Vector2.zero;
+        if (InputManager.Instance != null)
+        {
+            inputMove = InputManager.Instance.ReadMove();
+        }
+        else
+        {
+            inputMove.x = Input.GetAxisRaw("Horizontal");
+            inputMove.y = Input.GetAxisRaw("Vertical");
+        }
 
         // Normalize diagonal movement
-        movement = movement.normalized;
+        movement = inputMove.normalized;
 
         // Animation parameters
         bool isWalking = movement.sqrMagnitude > 0.001f;

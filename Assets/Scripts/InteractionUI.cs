@@ -34,8 +34,7 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private Button closeButton;
 
     [Header("Hint Display")]
-    [SerializeField] private GameObject interactionHint;
-    [SerializeField] private TextMeshProUGUI hintText;
+    // Hint display is now centralized in HintManager. Remove local hint fields.
 
     [Header("Editor Preview")]
     [Tooltip("Editor-only: select a MemoryData asset to preview in the Inspector using the Preview button.")]
@@ -90,6 +89,7 @@ public class InteractionUI : MonoBehaviour
     private Vector2 maxSizePixels = Vector2.zero;
 
     private InteractableObject[] allInteractables;
+    // Hint handling is centralized in HintManager; interactables will notify the manager directly.
 
     [Header("Video Debug")]
     [Tooltip("If enabled, show a small debug overlay in Play mode that reports VideoPlayer state for each page side.")]
@@ -110,6 +110,9 @@ public class InteractionUI : MonoBehaviour
     // cached layout state to detect changes
     private Vector2 lastLayoutSize = Vector2.zero;
     private float lastCanvasScale = -1f;
+
+    // Gamepad / joystick navigation state for horizontal axis to avoid repeat triggers
+    // (legacy axis repeat state removed; navigation now handled via InputManager events)
 
     // Book / paging state: pages are flat; we present two per spread.
     private MemoryData.MemoryPage[] currentPages = new MemoryData.MemoryPage[0];
@@ -135,10 +138,7 @@ public class InteractionUI : MonoBehaviour
             memoryPanel.SetActive(false);
         }
 
-        if (interactionHint != null)
-        {
-            interactionHint.SetActive(false);
-        }
+        // Local hint UI removed; HintManager is responsible for showing/hiding hints
 
         // Setup close button
         if (closeButton != null)
@@ -154,6 +154,41 @@ public class InteractionUI : MonoBehaviour
 
         // Find all interactable objects (use newer API to avoid deprecated call)
         allInteractables = FindObjectsByType<InteractableObject>(FindObjectsSortMode.None);
+    }
+
+    void OnEnable()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.NextPerformed += OnNextPerformed;
+            InputManager.Instance.PrevPerformed += OnPrevPerformed;
+            InputManager.Instance.CancelPerformed += OnCancelPerformed;
+        }
+    }
+
+    void OnDisable()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.NextPerformed -= OnNextPerformed;
+            InputManager.Instance.PrevPerformed -= OnPrevPerformed;
+            InputManager.Instance.CancelPerformed -= OnCancelPerformed;
+        }
+    }
+
+    private void OnNextPerformed()
+    {
+        if (memoryPanel != null && memoryPanel.activeSelf) NextPage();
+    }
+
+    private void OnPrevPerformed()
+    {
+        if (memoryPanel != null && memoryPanel.activeSelf) PrevPage();
+    }
+
+    private void OnCancelPerformed()
+    {
+        if (memoryPanel != null && memoryPanel.activeSelf) HideMemory();
     }
 
     // (removed GetWorldCenter — rotation handling removed)
@@ -187,7 +222,8 @@ public class InteractionUI : MonoBehaviour
         {
             var tmp = go.AddComponent<TextMeshProUGUI>();
             tmp.fontSize = 12f;
-            tmp.enableWordWrapping = true;
+            // use textWrappingMode instead of the obsolete enableWordWrapping
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.color = Color.yellow;
             tmp.alignment = TextAlignmentOptions.TopRight;
             tmp.raycastTarget = false;
@@ -228,23 +264,10 @@ public class InteractionUI : MonoBehaviour
 
     void Update()
     {
-        // Check for ESC key to close panel
-        if (memoryPanel != null && memoryPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
-        {
-            HideMemory();
-        }
-
-        // If the book UI is open allow left/right arrow keys to change spreads
-        if (memoryPanel != null && memoryPanel.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                NextPage();
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                PrevPage();
-        }
+        // Input is handled via InputManager events (Next/Prev/Cancel). No local polling required.
 
         // Update interaction hint
-        UpdateInteractionHint();
+        // HintManager centralizes hint display; interactables call it directly. No polling required.
 
         // Responsive layout: if the panel is active and responsiveness is enabled,
         // detect changes in the reference rect (book background or memory panel)
@@ -801,32 +824,4 @@ public class InteractionUI : MonoBehaviour
         RefreshPageDisplay();
     }
 
-    /// <summary>
-    /// Updates the "E to interact" hint based on proximity to interactable objects.
-    /// </summary>
-    private void UpdateInteractionHint()
-    {
-        if (interactionHint == null) return;
-
-        // Check if any interactable object is in range
-        bool anyInRange = false;
-        string objectName = "";
-
-        foreach (var interactable in allInteractables)
-        {
-            if (interactable != null && interactable.IsPlayerInRange())
-            {
-                anyInRange = true;
-                objectName = interactable.GetObjectName();
-                break;
-            }
-        }
-
-        interactionHint.SetActive(anyInRange);
-
-        if (anyInRange && hintText != null)
-        {
-            hintText.text = $"Press E to interact with {objectName}";
-        }
-    }
 }

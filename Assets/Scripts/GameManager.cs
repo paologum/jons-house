@@ -40,9 +40,24 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Handle global input (like pause menu, etc.)
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Could add pause menu here
-        }
+        // Prefer event-driven Cancel via InputManager when available
+        // Legacy polling removed; use InputManager.CancelPerformed event instead.
+    }
+
+    void OnEnable()
+    {
+        if (InputManager.Instance != null)
+            InputManager.Instance.CancelPerformed += OnCancelPerformed;
+    }
+
+    void OnDisable()
+    {
+        if (InputManager.Instance != null)
+            InputManager.Instance.CancelPerformed -= OnCancelPerformed;
+    }
+
+    private void OnCancelPerformed()
+    {
+        // Could add pause menu here
     }
 }
