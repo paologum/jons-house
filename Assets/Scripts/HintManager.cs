@@ -18,6 +18,9 @@ public class HintManager : MonoBehaviour
     private TextMeshProUGUI hintText;
     // Track the current interact owner so hide requests from other objects don't stomp a newer hint
     private string currentInteractOwner = null;
+    // If a Show request occurs before the hintObject is registered, keep the pending message
+    // so it can be shown once RegisterHintObject is called.
+    private string pendingHintMessage = null;
 
     void Awake()
     {
@@ -41,7 +44,20 @@ public class HintManager : MonoBehaviour
     {
         hintObject = go;
         CacheHintText();
-        if (hintObject != null) hintObject.SetActive(false);
+        if (hintObject != null)
+        {
+            // ensure the visual hint is initially inactive
+            hintObject.SetActive(false);
+
+            // If an interactable previously attempted to show a hint before the
+            // hintObject was registered, currentInteractOwner may be set but
+            // nothing was actually displayed. Re-show the pending hint so the
+            // player sees it without needing to move out/in of range.
+            if (!string.IsNullOrEmpty(currentInteractOwner))
+            {
+                ShowInteractHint(currentInteractOwner);
+            }
+        }
     }
 
     /// <summary>
@@ -49,11 +65,21 @@ public class HintManager : MonoBehaviour
     /// </summary>
     public void ShowHint(string message)
     {
-        if (hintObject == null) return;
+        if (hintObject == null)
+        {
+            // store pending message for later (diagnostics/restore)
+            pendingHintMessage = message;
+            Debug.Log($"HintManager: ShowHint called but hintObject null; storing pending message='{message}'", this);
+            return;
+        }
+
         hintObject.SetActive(true);
         if (hintText != null) hintText.text = message;
         // generic show does not set an owner
         currentInteractOwner = null;
+        // clear any pending message since we displayed it
+        pendingHintMessage = null;
+        Debug.Log($"HintManager: ShowHint displayed message='{message}'", this);
     }
 
     /// <summary>
@@ -61,10 +87,20 @@ public class HintManager : MonoBehaviour
     /// </summary>
     public void ShowInteractHint(string objectName)
     {
-        if (string.IsNullOrEmpty(objectName)) ShowHint("Press E to interact");
-        else ShowHint($"Press E to interact with {objectName}");
-        // record the owner so only the originating object can hide this hint
+        string msg = string.IsNullOrEmpty(objectName) ? "Press E to interact" : $"Press E to interact with {objectName}";
+        // Always record the owner so HideHintFor can clear pending shows as well
         currentInteractOwner = objectName;
+
+        if (hintObject == null)
+        {
+            // store pending message and owner; RegisterHintObject will re-show it
+            pendingHintMessage = msg;
+            Debug.Log($"HintManager: ShowInteractHint('{objectName}') called but hintObject null; pending stored.", this);
+            return;
+        }
+
+        ShowHint(msg);
+        Debug.Log($"HintManager: ShowInteractHint displayed for '{objectName}'", this);
     }
 
     /// <summary>
@@ -83,10 +119,16 @@ public class HintManager : MonoBehaviour
     /// </summary>
     public void HideHintFor(string objectName)
     {
+        Debug.Log($"HintManager: HideHintFor called for '{objectName}'; currentOwner='{currentInteractOwner}' pending='{pendingHintMessage}'", this);
         if (string.IsNullOrEmpty(objectName)) { HideHint(); return; }
         if (currentInteractOwner == objectName)
         {
             HideHint();
+        }
+        else if (!string.IsNullOrEmpty(pendingHintMessage) && currentInteractOwner == objectName)
+        {
+            // if we had a pending message for this owner, clear it so it won't appear later
+            pendingHintMessage = null;
         }
     }
 }
