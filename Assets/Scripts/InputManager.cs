@@ -24,6 +24,8 @@ public class InputManager : MonoBehaviour
     public event Action CancelPerformed;
     public event Action NextPerformed;
     public event Action PrevPerformed;
+    // Raised when the OpenJukebox action is performed (e.g. keyboard J or gamepad Start)
+    public event Action OpenJukeboxPerformed;
     public event Action RandomizeToggled;
 
     private readonly List<InteractableObject> interactables = new List<InteractableObject>();
@@ -42,6 +44,7 @@ public class InputManager : MonoBehaviour
 
     private InputAction moveAction;
     private InputAction interactAction;
+    private InputAction openJukeboxAction;
     private InputAction nextAction;
     private InputAction prevAction;
     private InputAction randomizeAction;
@@ -52,6 +55,7 @@ public class InputManager : MonoBehaviour
     private Action<InputAction.CallbackContext> cbNext;
     private Action<InputAction.CallbackContext> cbPrev;
     private Action<InputAction.CallbackContext> cbRandomize;
+    private Action<InputAction.CallbackContext> cbOpenJukebox;
     private Action<InputAction.CallbackContext> cbCancel;
 #endif
 
@@ -134,6 +138,7 @@ public class InputManager : MonoBehaviour
 
         moveAction = gameplayMap.FindAction("Move", true);
         interactAction = gameplayMap.FindAction("Interact", false);
+    openJukeboxAction = gameplayMap.FindAction("OpenJukebox", false);
         nextAction = gameplayMap.FindAction("Next", false);
         prevAction = gameplayMap.FindAction("Prev", false);
         randomizeAction = gameplayMap.FindAction("Randomize", false);
@@ -142,9 +147,11 @@ public class InputManager : MonoBehaviour
         cbNext = ctx => NextPerformed?.Invoke();
         cbPrev = ctx => PrevPerformed?.Invoke();
         cbRandomize = ctx => RandomizeToggled?.Invoke();
+        cbOpenJukebox = ctx => OpenJukeboxPerformed?.Invoke();
     cbCancel = ctx => { Debug.Log("InputManager: UI Cancel performed", this); CancelPerformed?.Invoke(); };
 
         if (interactAction != null) interactAction.performed += cbInteract;
+    if (openJukeboxAction != null) openJukeboxAction.performed += cbOpenJukebox;
         if (nextAction != null) nextAction.performed += cbNext;
         if (prevAction != null) prevAction.performed += cbPrev;
         if (randomizeAction != null) randomizeAction.performed += cbRandomize;
@@ -175,6 +182,7 @@ public class InputManager : MonoBehaviour
         try
         {
             if (interactAction != null && cbInteract != null) interactAction.performed -= cbInteract;
+            if (openJukeboxAction != null && cbOpenJukebox != null) openJukeboxAction.performed -= cbOpenJukebox;
             if (nextAction != null && cbNext != null) nextAction.performed -= cbNext;
             if (prevAction != null && cbPrev != null) prevAction.performed -= cbPrev;
             if (randomizeAction != null && cbRandomize != null) randomizeAction.performed -= cbRandomize;
@@ -185,7 +193,7 @@ public class InputManager : MonoBehaviour
         try { gameplayMap?.Disable(); } catch { }
 
         // clear references
-        moveAction = interactAction = nextAction = prevAction = randomizeAction = uiCancelAction = null;
+        moveAction = interactAction = openJukeboxAction = nextAction = prevAction = randomizeAction = uiCancelAction = null;
         gameplayMap = null;
         actionsAsset = null;
         isWired = false;

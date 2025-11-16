@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 082e9456071d24560b56eae8970d5072, type: 3}
   m_Name: DoorMemory
   m_EditorClassIdentifier: Assembly-CSharp::MemoryData
-  title: Door Memory
+  title: 
   pages:
   - image: {fileID: 21300000, guid: c4f9d5ef9fe5b46bcb0c0f0fe51420a6, type: 3}
     caption: My baby is LOADED

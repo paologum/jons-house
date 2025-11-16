@@ -159,13 +159,47 @@ public class JukeboxUI : MonoBehaviour
     void OnEnable()
     {
         if (InputManager.Instance != null)
+        {
             InputManager.Instance.CancelPerformed += OnCancelPerformed;
+            InputManager.Instance.OpenJukeboxPerformed += OnOpenJukeboxPerformed;
+        }
     }
 
     void OnDisable()
     {
         if (InputManager.Instance != null)
+        {
             InputManager.Instance.CancelPerformed -= OnCancelPerformed;
+            InputManager.Instance.OpenJukeboxPerformed -= OnOpenJukeboxPerformed;
+        }
+    }
+
+    private void OnOpenJukeboxPerformed()
+    {
+        // Toggle the jukebox UI. If closed, attempt to find a Jukebox in scene to target.
+        if (panel != null && panel.activeSelf)
+        {
+            Hide();
+            return;
+        }
+
+        // If we already have a cached jukebox target, show it. Otherwise find the first in scene.
+        if (jukebox != null)
+        {
+            Show(jukebox);
+            return;
+        }
+
+        // Try to find any Jukebox in the scene and open the UI for it.
+        var found = FindObjectOfType<Jukebox>();
+        if (found != null)
+        {
+            Show(found);
+        }
+        else
+        {
+            Debug.Log("JukeboxUI: OpenJukebox input received but no Jukebox found in scene.", this);
+        }
     }
 
     private void OnCancelPerformed()
