@@ -26,6 +26,8 @@ public class InputManager : MonoBehaviour
     public event Action PrevPerformed;
     // Raised when the OpenJukebox action is performed (e.g. keyboard J or gamepad Start)
     public event Action OpenJukeboxPerformed;
+    // Raised when the UI Submit action is performed (e.g. gamepad A / keyboard Enter)
+    public event Action SubmitPerformed;
     public event Action RandomizeToggled;
 
     private readonly List<InteractableObject> interactables = new List<InteractableObject>();
@@ -45,6 +47,8 @@ public class InputManager : MonoBehaviour
     private InputAction moveAction;
     private InputAction interactAction;
     private InputAction openJukeboxAction;
+    private InputAction uiSubmitAction;
+    private InputAction uiNavigateAction;
     private InputAction nextAction;
     private InputAction prevAction;
     private InputAction randomizeAction;
@@ -56,6 +60,7 @@ public class InputManager : MonoBehaviour
     private Action<InputAction.CallbackContext> cbPrev;
     private Action<InputAction.CallbackContext> cbRandomize;
     private Action<InputAction.CallbackContext> cbOpenJukebox;
+    private Action<InputAction.CallbackContext> cbSubmit;
     private Action<InputAction.CallbackContext> cbCancel;
 #endif
 
@@ -148,6 +153,7 @@ public class InputManager : MonoBehaviour
         cbPrev = ctx => PrevPerformed?.Invoke();
         cbRandomize = ctx => RandomizeToggled?.Invoke();
         cbOpenJukebox = ctx => OpenJukeboxPerformed?.Invoke();
+        cbSubmit = ctx => SubmitPerformed?.Invoke();
     cbCancel = ctx => { Debug.Log("InputManager: UI Cancel performed", this); CancelPerformed?.Invoke(); };
 
         if (interactAction != null) interactAction.performed += cbInteract;
@@ -164,6 +170,9 @@ public class InputManager : MonoBehaviour
         {
             uiCancelAction = uiMap.FindAction("Cancel", false);
             if (uiCancelAction != null) uiCancelAction.performed += cbCancel;
+            uiSubmitAction = uiMap.FindAction("Submit", false);
+            if (uiSubmitAction != null) uiSubmitAction.performed += cbSubmit;
+            uiNavigateAction = uiMap.FindAction("Navigate", false);
         }
 
         // Note: Cancel is wired only from the UI map above (no cross-map fallbacks).
@@ -187,16 +196,29 @@ public class InputManager : MonoBehaviour
             if (prevAction != null && cbPrev != null) prevAction.performed -= cbPrev;
             if (randomizeAction != null && cbRandomize != null) randomizeAction.performed -= cbRandomize;
             if (uiCancelAction != null && cbCancel != null) uiCancelAction.performed -= cbCancel;
+            if (uiSubmitAction != null && cbSubmit != null) uiSubmitAction.performed -= cbSubmit;
+            if (uiNavigateAction != null) { /* nothing to unsubscribe for polling */ }
         }
         catch { }
 
         try { gameplayMap?.Disable(); } catch { }
 
         // clear references
-        moveAction = interactAction = openJukeboxAction = nextAction = prevAction = randomizeAction = uiCancelAction = null;
+        moveAction = interactAction = openJukeboxAction = nextAction = prevAction = randomizeAction = uiCancelAction = uiSubmitAction = uiNavigateAction = null;
         gameplayMap = null;
         actionsAsset = null;
         isWired = false;
+    }
+
+    /// <summary>
+    /// Read the UI Navigate Vector2 (if present) from the UI action map. Returns Vector2.zero if not present.
+    /// </summary>
+    public Vector2 ReadUINavigate()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (uiNavigateAction != null) return uiNavigateAction.ReadValue<Vector2>();
+#endif
+        return Vector2.zero;
     }
 #endif
 

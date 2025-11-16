@@ -33,6 +33,8 @@ public class JukeboxUI : MonoBehaviour
     // currently showing a particular jukebox instance.
     public Jukebox CurrentJukebox => jukebox;
     private List<Button> banners = new List<Button>();
+    // for Move axis edge detection
+    private float _lastMoveY = 0f;
 
     void Start()
     {
@@ -153,6 +155,25 @@ public class JukeboxUI : MonoBehaviour
         if (panel != null && panel.activeSelf)
         {
             // InputManager raises CancelPerformed events; Interaction handled elsewhere.
+            // Poll the Gameplay Move vertical axis to navigate the list (edge-detect)
+            if (InputManager.Instance != null)
+            {
+                // prefer UI Navigate bindings (dpad/arrow/leftstick) when available
+                Vector2 nav = InputManager.Instance.ReadUINavigate();
+                float y = nav.y;
+                float dead = 0.5f;
+                // rising edge up
+                if (y > dead && _lastMoveY <= dead)
+                {
+                    MoveSelection(-1); // up
+                }
+                // rising edge down
+                else if (y < -dead && _lastMoveY >= -dead)
+                {
+                    MoveSelection(1); // down
+                }
+                _lastMoveY = y;
+            }
         }
     }
 
@@ -162,6 +183,7 @@ public class JukeboxUI : MonoBehaviour
         {
             InputManager.Instance.CancelPerformed += OnCancelPerformed;
             InputManager.Instance.OpenJukeboxPerformed += OnOpenJukeboxPerformed;
+            InputManager.Instance.SubmitPerformed += OnSubmitPerformed;
         }
     }
 
@@ -171,6 +193,66 @@ public class JukeboxUI : MonoBehaviour
         {
             InputManager.Instance.CancelPerformed -= OnCancelPerformed;
             InputManager.Instance.OpenJukeboxPerformed -= OnOpenJukeboxPerformed;
+            InputManager.Instance.SubmitPerformed -= OnSubmitPerformed;
+        }
+    }
+
+    private void OnSubmitPerformed()
+    {
+        if (panel == null || !panel.activeSelf) return;
+
+        var es = EventSystem.current;
+        var selected = es != null ? es.currentSelectedGameObject : null;
+        if (selected == null)
+        {
+            // fallback to first banner
+            if (banners != null && banners.Count > 0 && banners[0] != null)
+            {
+                banners[0].onClick.Invoke();
+            }
+            return;
+        }
+
+        var btn = selected.GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.Invoke();
+        }
+    }
+
+    private void MoveSelection(int direction)
+    {
+        if (banners == null || banners.Count == 0) return;
+
+        var es = EventSystem.current;
+        GameObject current = es != null ? es.currentSelectedGameObject : null;
+
+        int currentIndex = -1;
+        if (current != null)
+        {
+            for (int i = 0; i < banners.Count; i++)
+            {
+                if (banners[i] != null && banners[i].gameObject == current)
+                {
+                    currentIndex = i;
+                    break;
+                }
+            }
+        }
+
+        int newIndex;
+        if (currentIndex == -1)
+        {
+            newIndex = direction > 0 ? 0 : banners.Count - 1;
+        }
+        else
+        {
+            newIndex = Mathf.Clamp(currentIndex + direction, 0, banners.Count - 1);
+        }
+
+        if (banners[newIndex] != null && es != null)
+        {
+            es.SetSelectedGameObject(banners[newIndex].gameObject);
         }
     }
 

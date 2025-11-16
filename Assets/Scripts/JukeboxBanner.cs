@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 /// Small helper attached to instantiated banner buttons to handle pointer hover scaling and simple highlight.
 /// Requires the target to have a RectTransform (UI Button) and will modify localScale on hover.
 /// </summary>
-public class JukeboxBanner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class JukeboxBanner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     private GameObject target;
     private float hoverScale = 1.08f;
@@ -31,6 +31,24 @@ public class JukeboxBanner : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        if (target != null)
+        {
+            StopAllCoroutines();
+            target.transform.localScale = baseScale;
+        }
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        if (target != null)
+        {
+            StopAllCoroutines();
+            target.transform.localScale = baseScale * hoverScale;
+        }
+    }
+
+    public void OnDeselect(BaseEventData eventData)
     {
         if (target != null)
         {

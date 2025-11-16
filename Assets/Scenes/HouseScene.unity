@@ -1409,120 +1409,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &274447431
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 421433290}
-    m_Modifications:
-    - target: {fileID: 438889420429950061, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_Name
-      value: BannerButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1772.2086
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 359.375
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
---- !u!224 &274447432 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1578191935332438835, guid: 4d2a62ba91d934faaa38e2f3086bd5c4, type: 3}
-  m_PrefabInstance: {fileID: 274447431}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &276946523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1701,7 +1587,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 150
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 0
@@ -2200,6 +2086,12 @@ MonoBehaviour:
   - video: {fileID: 0}
     audio: {fileID: 8300000, guid: 97ff2db7e4110426ab3d728286be0906, type: 3}
     displayName: Spaghetti!
+  - video: {fileID: 0}
+    audio: {fileID: 8300000, guid: 44f1c43b3e546404e9febabf0cf314fa, type: 3}
+    displayName: Laufey!
+  - video: {fileID: 0}
+    audio: {fileID: 8300000, guid: c41015914ccf94e1d9ac319c9918bab4, type: 3}
+    displayName: Lover Girl!
   playOnStart: 1
   randomize: 0
   loop: 1
@@ -2667,7 +2559,6 @@ RectTransform:
   - {fileID: 771292009}
   - {fileID: 192950175}
   - {fileID: 717329990}
-  - {fileID: 274447432}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3656,7 +3547,7 @@ GameObject:
   - component: {fileID: 603770097}
   - component: {fileID: 603770098}
   m_Layer: 0
-  m_Name: furniture pack grey outline_49
+  m_Name: Desk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5532,6 +5423,7 @@ GameObject:
   m_Component:
   - component: {fileID: 641224383}
   - component: {fileID: 641224384}
+  - component: {fileID: 641224385}
   m_Layer: 0
   m_Name: furniture pack grey outline_449
   m_TagString: Untagged
@@ -5612,6 +5504,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &641224385
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641224382}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.75, y: 1}
+    newSize: {x: 0.75, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.75, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &648366606
 GameObject:
   m_ObjectHideFlags: 0
@@ -7249,7 +7187,7 @@ GameObject:
   - component: {fileID: 889545985}
   - component: {fileID: 889545986}
   m_Layer: 0
-  m_Name: TopDownHouse_FurnitureState1_28
+  m_Name: Couch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7964,7 +7902,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 3.67, y: -13.8, z: -2}
-  m_LocalScale: {x: 1.39, y: 1.39, z: 1.39}
+  m_LocalScale: {x: 0.67, y: 0.67, z: 0.67}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1045710884}
@@ -9058,9 +8996,9 @@ Transform:
   m_GameObject: {fileID: 1358081406}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.71, y: -14.96, z: -1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -1.71, y: -13.86, z: -1}
+  m_LocalScale: {x: 0.56, y: 0.56, z: 0.56}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1045710884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9711,7 +9649,7 @@ GameObject:
   - component: {fileID: 1408925845}
   - component: {fileID: 1408925846}
   m_Layer: 0
-  m_Name: furniture pack grey outline_265
+  m_Name: Mirror
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10965,7 +10903,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1616115460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14598,6 +14536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1859411851}
   - component: {fileID: 1859411852}
+  - component: {fileID: 1859411853}
   m_Layer: 0
   m_Name: furniture pack grey outline_463 (1)
   m_TagString: Untagged
@@ -14678,6 +14617,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1859411853
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859411850}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!224 &1863270170 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8832442255876708757, guid: dd4670636052a42879bfb1b5740d749a, type: 3}
@@ -15419,7 +15404,7 @@ GameObject:
   - component: {fileID: 2030251947}
   - component: {fileID: 2030251949}
   m_Layer: 0
-  m_Name: furniture pack grey outline_49 (1)
+  m_Name: Desk 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15577,7 +15562,7 @@ GameObject:
   - component: {fileID: 2083851651}
   - component: {fileID: 2083851652}
   m_Layer: 0
-  m_Name: furniture pack grey outline_66
+  m_Name: Bed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
