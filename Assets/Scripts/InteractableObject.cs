@@ -22,6 +22,7 @@ public class InteractableObject : MonoBehaviour
     private Color[] originalColors;
     private InteractionUI interactionUI;
     private Collider2D objectCollider;
+    private bool registeredWithInputManager = false;
 
     void Start()
     {
@@ -123,6 +124,7 @@ public class InteractableObject : MonoBehaviour
 
     public void Interact()
     {
+        Debug.Log($"InteractableObject.Interact called on '{gameObject.name}'; memoryDataAsset={(memoryDataAsset != null ? memoryDataAsset.name : "(null)")}; interactionUI={(interactionUI != null)}; playerInRange={playerInRange}", this);
         if (interactionUI != null)
         {
             if (memoryDataAsset != null)
@@ -139,7 +141,32 @@ public class InteractableObject : MonoBehaviour
     void OnEnable()
     {
         if (InputManager.Instance != null)
+        {
             InputManager.Instance.RegisterInteractable(this);
+            registeredWithInputManager = true;
+            Debug.Log($"InteractableObject: Registered '{gameObject.name}' with InputManager.", this);
+        }
+        else
+        {
+            Debug.Log($"InteractableObject: InputManager not present when enabling '{gameObject.name}'; will attempt to register next frame.", this);
+            StartCoroutine(RegisterWhenAvailable());
+        }
+    }
+
+    private System.Collections.IEnumerator RegisterWhenAvailable()
+    {
+        // wait a frame to allow InputManager to initialize
+        yield return null;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.RegisterInteractable(this);
+            registeredWithInputManager = true;
+            Debug.Log($"InteractableObject: Late-registered '{gameObject.name}' with InputManager.", this);
+        }
+        else
+        {
+            Debug.Log($"InteractableObject: InputManager still not present for '{gameObject.name}' after wait; will rely on FindObjects fallback.", this);
+        }
     }
 
     void OnDisable()

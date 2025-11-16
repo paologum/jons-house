@@ -75,23 +75,12 @@ public class Jukebox : MonoBehaviour
 
     void OnEnable()
     {
-        if (InputManager.Instance != null)
-        {
-            // Subscribe guarded handlers so jukebox only responds when appropriate
-            InputManager.Instance.NextPerformed += OnNextInput;
-            InputManager.Instance.PrevPerformed += OnPrevInput;
-            InputManager.Instance.RandomizeToggled += OnRandomizeInput;
-        }
+        // Jukebox no longer listens to global Next/Prev input; UI is responsible for changing tracks.
     }
 
     void OnDisable()
     {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.NextPerformed -= OnNextInput;
-            InputManager.Instance.PrevPerformed -= OnPrevInput;
-            InputManager.Instance.RandomizeToggled -= OnRandomizeInput;
-        }
+        // No subscriptions to remove.
     }
 
     private void OnDestroy()
@@ -194,55 +183,6 @@ public class Jukebox : MonoBehaviour
     private void OnRandomizeToggled()
     {
         randomize = !randomize;
-    }
-
-    // Guarded input handlers so jukebox only responds when the UI is open for this jukebox
-    // or when playback is currently active.
-    private bool ShouldRespondToInput()
-    {
-        // If audio or video is currently playing, allow controls
-        if ((audioSource != null && audioSource.isPlaying) || (vp != null && vp.isPlaying))
-            return true;
-
-        // If there's an active JukeboxUI showing this jukebox, allow controls
-        var uis = FindObjectsByType<JukeboxUI>(FindObjectsSortMode.None);
-        foreach (var ui in uis)
-        {
-            if (ui != null && ui.panel != null && ui.panel.activeSelf && ui.CurrentJukebox == this)
-                return true;
-        }
-
-        // If the player is currently providing movement input, don't treat directional keys as Next/Prev
-        // This prevents arrow keys (which are often bound both to Move and to Next/Prev) from changing
-        // tracks while the player is moving around the scene.
-        if (InputManager.Instance != null)
-        {
-            var mv = InputManager.Instance.ReadMove();
-            // Ignore next/prev if movement magnitude exceeds threshold (tweakable)
-            const float movementThreshold = 0.2f; // magnitude
-            if (mv.sqrMagnitude > movementThreshold * movementThreshold)
-                return false;
-        }
-
-        return false;
-    }
-
-    private void OnNextInput()
-    {
-        if (!ShouldRespondToInput()) return;
-        PlayNext();
-    }
-
-    private void OnPrevInput()
-    {
-        if (!ShouldRespondToInput()) return;
-        PlayPrev();
-    }
-
-    private void OnRandomizeInput()
-    {
-        if (!ShouldRespondToInput()) return;
-        OnRandomizeToggled();
     }
 
     void Update()
